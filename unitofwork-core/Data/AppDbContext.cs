@@ -35,7 +35,7 @@ namespace unitofwork_core.Data
             {
                 connectionString = _configuration.GetConnectionString("AzureConnection");
             }
-            if (!string.IsNullOrEmpty(connectionString)) optionsBuilder.UseSqlServer(connectionString);
+            if (!string.IsNullOrEmpty(connectionString)) optionsBuilder.UseSqlServer(_configuration.GetConnectionString("AzureConnection"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
