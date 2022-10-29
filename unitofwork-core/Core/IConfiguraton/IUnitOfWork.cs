@@ -7,6 +7,8 @@ namespace unitofwork_core.Core.IConfiguraton
         IShopRepository Shops {get;}
         IShipperRepository Shippers {get;}
         IAdminRepository Admins {get;}
+        IOrderRepository Orders {get;}
+        IWalletRepository Wallets {get;}
         Task CompleteAsync();
         void Complete();
     }

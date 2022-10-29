@@ -11,6 +11,8 @@ namespace unitofwork_core.Data
         public IShopRepository Shops { get; private set; }
         public IShipperRepository Shippers { get; private set; }
         public IAdminRepository Admins { get; private set; }
+        public IOrderRepository Orders { get; private set; }
+        public IWalletRepository Wallets { get; private set; }
         public UnitOfWork(AppDbContext context, ILogger<UnitOfWork> logger)
         {
             _context = context;
@@ -18,6 +20,8 @@ namespace unitofwork_core.Data
             Shops = new ShopRepository(_context, _logger);
             Shippers = new ShipperRepository(_context, _logger);
             Admins = new AdminRepository(_context, _logger);
+            Orders = new OrderRepository(_context, _logger);
+            Wallets = new WalletRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

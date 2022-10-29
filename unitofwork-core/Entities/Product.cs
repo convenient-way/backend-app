@@ -1,4 +1,6 @@
-﻿namespace unitofwork_core.Entities
+﻿using unitofwork_core.Model.Product;
+
+namespace unitofwork_core.Entities
 {
     public class Product : BaseEntity
     {
@@ -8,5 +10,15 @@
         public Guid OrderRoutingId { get; set; }
         public OrderRouting? OrderRouting { get; set; }
         #endregion
+
+        public ResponseProductModel ToResponseModel()
+        {
+            ResponseProductModel model = new ResponseProductModel();
+            model.Id = this.Id;
+            model.Name = this.Name;
+            model.Description = this.Description;
+            model.OrderRoutingId = this.OrderRoutingId;
+            return model;
+        }
     }
 }

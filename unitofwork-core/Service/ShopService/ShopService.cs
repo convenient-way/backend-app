@@ -1,8 +1,8 @@
 ﻿using unitofwork_core.Constant.Shop;
+using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
-using unitofwork_core.Entities.Extension;
 using unitofwork_core.Model.Shop;
 
 namespace unitofwork_core.Service.ShopService
@@ -33,10 +33,27 @@ namespace unitofwork_core.Service.ShopService
             shop.Address = model.Address;
             shop.Longitude = model.Longitude;
             shop.Latitude = model.Latitude;
-            
+
+            Wallet defaultWallet = new Wallet
+            {
+                WalletType = WalletType.DEFAULT,
+                Status = WalletStatus.ACTIVE,
+                ShipperId = shop.Id
+            };
+            Wallet promotionWallet = new Wallet
+            {
+                WalletType = WalletType.PROMOTION,
+                Status = WalletStatus.ACTIVE,
+                ShipperId = shop.Id
+            };
+            List<Wallet> wallets = new List<Wallet> {
+                defaultWallet, promotionWallet
+            };
+            shop.Wallets = wallets;
+
             await _shopRepo.InsertAsync(shop);
             await _unitOfWork.CompleteAsync();
             return shop.ToResponseModel();
-    }
+        }
     }
 }

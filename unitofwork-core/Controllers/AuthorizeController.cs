@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using unitofwork_core.Model.ApiResponse;
 using unitofwork_core.Model.Authorize;
-using unitofwork_core.Model.Shipepr;
+using unitofwork_core.Model.Shipper;
 using unitofwork_core.Service.AuthorizeService;
 
 namespace unitofwork_core.Controllers
@@ -20,7 +20,7 @@ namespace unitofwork_core.Controllers
         }
 
         [HttpPost]
-        [SwaggerOperation(Summary ="Login with username and password")]
+        [SwaggerOperation(Summary = "Login with username and password")]
         public async Task<ActionResult<ApiResponse<ResponseLoginModel>>> Login(LoginModel model, bool isShop = false, bool isShipper = false, bool isAdmin = false)
         {
             try

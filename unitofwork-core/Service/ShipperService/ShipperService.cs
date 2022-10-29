@@ -1,9 +1,9 @@
 ﻿
+using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
-using unitofwork_core.Entities.Extension;
-using unitofwork_core.Model.Shipepr;
+using unitofwork_core.Model.Shipper;
 
 namespace unitofwork_core.Service.ShipperService
 {
@@ -20,7 +20,8 @@ namespace unitofwork_core.Service.ShipperService
             _shipperRepo = unitOfWork.Shippers;
         }
 
-        public async Task<ResponseShipeprModel> Register(RegisterShipperModel model)
+
+        public async Task<ResponseShipperModel> Register(RegisterShipperModel model)
         {
             Shipper shipper = new Shipper();
             shipper.UserName = model.UserName;
@@ -35,6 +36,23 @@ namespace unitofwork_core.Service.ShipperService
             shipper.HomeLatitude = model.HomeLatitude;
             shipper.DestinationLongitude = model.DestinationLongitude;
             shipper.DestinationLatitude = model.DestinationLatitude;
+
+            Wallet defaultWallet = new Wallet {
+                WalletType = WalletType.DEFAULT,
+                Status = WalletStatus.ACTIVE,
+                ShipperId = shipper.Id
+            };
+            Wallet promotionWallet = new Wallet
+            {
+                WalletType = WalletType.PROMOTION,
+                Status = WalletStatus.ACTIVE,
+                ShipperId = shipper.Id
+            };
+            List<Wallet> wallets = new List<Wallet> { 
+                defaultWallet, promotionWallet
+            };
+            shipper.Wallets = wallets;
+
             await _shipperRepo.InsertAsync(shipper);
             await _unitOfWork.CompleteAsync();
             return shipper.ToResponseModel();

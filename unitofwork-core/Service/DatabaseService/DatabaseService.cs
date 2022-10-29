@@ -28,7 +28,7 @@ namespace unitofwork_core.Service.DatabaseService
 
         public void GenerateData()
         {
-            Role roleAdmin = new Role
+            Role roleAdmin = new Role 
             {
                 Name = RoleName.ADMIN
             };

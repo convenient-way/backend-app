@@ -1,9 +1,9 @@
-﻿using unitofwork_core.Model.Shipepr;
+﻿using unitofwork_core.Model.Shipper;
 
 namespace unitofwork_core.Service.ShipperService
 {
     public interface IShipperService
     {
-        Task<ResponseShipeprModel> Register(RegisterShipperModel model);
+        Task<ResponseShipperModel> Register(RegisterShipperModel model);
     }
 }
