@@ -1,5 +1,6 @@
 ﻿
 
+using unitofwork_core.Model.Shipepr;
 using unitofwork_core.Model.Shop;
 
 namespace unitofwork_core.Entities.Extension
@@ -22,6 +23,24 @@ namespace unitofwork_core.Entities.Extension
             model.Longitude = shop.Longitude;
             model.Latitude = shop.Latitude;
             model.Address = shop.Address;
+            return model;
+        }
+
+        public static ResponseShipeprModel ToResponseModel(this Shipper shipper) { 
+            ResponseShipeprModel model = new ResponseShipeprModel();
+            model.UserName = shipper.UserName;
+            model.Email = shipper.Email;
+            model.DisplayName = shipper.DisplayName;
+            model.PhoneNumber = shipper.PhoneNumber;
+            model.PhotoUrl = shipper.PhotoUrl;
+            model.Status = shipper.Status;
+            model.Address = shipper.Address;
+            model.HomeLongitude = shipper.HomeLongitude;
+            model.HomeLatitude = shipper.HomeLatitude;
+            model.DestinationLongitude = shipper.DestinationLongitude;
+            model.DestinationLatitude = shipper.DestinationLatitude;
+            model.CreatedAt = shipper.CreatedAt;
+            model.ModifiedAt = shipper.ModifiedAt;
             return model;
         }
     }

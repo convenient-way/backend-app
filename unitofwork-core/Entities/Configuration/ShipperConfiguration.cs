@@ -8,6 +8,8 @@ namespace unitofwork_core.Entities.Configuration
         public void Configure(EntityTypeBuilder<Shipper> builder)
         {
             builder.ToTable("Shipper");
+            builder.HasIndex(sh => sh.UserName).IsUnique();
+            builder.HasIndex(sh => sh.Email).IsUnique();
             builder.Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE()").ValueGeneratedOnAdd();
             builder.Property(u => u.ModifiedAt)
                 .HasDefaultValueSql("GETDATE()").ValueGeneratedOnAddOrUpdate();

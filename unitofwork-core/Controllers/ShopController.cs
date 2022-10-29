@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using unitofwork_core.Model.ApiResponse;
 using unitofwork_core.Model.Shop;
 using unitofwork_core.Service.ShopService;
@@ -18,6 +19,7 @@ namespace unitofwork_core.Controllers
         }
 
         [HttpPost("register")]
+        [SwaggerOperation(Summary ="Register shop")]
         public async Task<ActionResult<ApiResponse<ResponseShopModel>>> Register(RegisterShopModel model)
         {
             try

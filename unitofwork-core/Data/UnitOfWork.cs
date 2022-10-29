@@ -8,19 +8,16 @@ namespace unitofwork_core.Data
     {
         private readonly AppDbContext _context;
         private readonly ILogger<UnitOfWork> _logger;
-   /*     public IUserRepository Users { get; private set; }
-        public IRoleRepository Roles { get; private set; }*/
-            public IShopRepository Shops { get; private set; }
-
-
+        public IShopRepository Shops { get; private set; }
+        public IShipperRepository Shippers { get; private set; }
+        public IAdminRepository Admins { get; private set; }
         public UnitOfWork(AppDbContext context, ILogger<UnitOfWork> logger)
         {
             _context = context;
             _logger = logger;
             Shops = new ShopRepository(_context, _logger);
-
-            /*Users = new UserRepository(_context, _logger);
-            Roles = new RoleRepository(_context, _logger);*/
+            Shippers = new ShipperRepository(_context, _logger);
+            Admins = new AdminRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

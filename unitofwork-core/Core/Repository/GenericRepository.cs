@@ -418,6 +418,47 @@ namespace unitofwork_core.Core.Repository
             }
             return query.Select(selector).ToPaginatedListAsync<TResult>(pageIndex, pageSize);
         }
+
+        public virtual async Task<TEntity?> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, 
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>>? include = null,
+            bool disableTracking = true)
+        {
+            TEntity? result;
+            IQueryable<TEntity> query = _dbSet;
+            if (disableTracking) {
+                query = query.AsNoTracking();
+            }
+            if (include != null) {
+                query = include(query);
+            }
+            result = await query.FirstOrDefaultAsync(predicate);
+            return result;
+        }
+
+        public async Task<TEntity?> GetSingleOrDefaultAsync(List<Expression<Func<TEntity, bool>>> predicates,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>>? include = null, bool disableTracking = true)
+        {
+            TEntity? result;
+            IQueryable<TEntity> query = _dbSet;
+            if (disableTracking)
+            {
+                query = query.AsNoTracking();
+            }
+            if (include != null)
+            {
+                query = include(query);
+            }
+            if (predicates.Count > 0)
+            {
+                int count = predicates.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    query = query.Where(predicates[i]);
+                }
+            }
+            result = await query.FirstOrDefaultAsync();
+            return result;
+        }
     }
 }
 

@@ -26,7 +26,14 @@ namespace unitofwork_core.Core.IRepository
         Task InsertAsync(IEnumerable<TEntity> entities);
         Task InsertAsync(IList<TEntity> entities);
         Task<bool> DeleteAsync(Guid id);
-
+        Task<TEntity?> GetSingleOrDefaultAsync(
+            Expression<Func<TEntity, bool>> predicate,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>>? include = null,
+            bool disableTracking = true);
+        Task<TEntity?> GetSingleOrDefaultAsync(
+            List<Expression<Func<TEntity, bool>>> predicates,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>>? include = null,
+            bool disableTracking = true);
         PaginatedList<TEntity> GetPagedList(Expression<Func<TEntity, bool>>? predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>>? include = null,
