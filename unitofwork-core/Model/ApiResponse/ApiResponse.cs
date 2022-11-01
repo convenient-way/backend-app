@@ -7,4 +7,9 @@
         public object? Error { get; set; }
         public T? Data { get; set; }
     }
+
+    public class ApiResponse {
+        public bool Success { get; set; } = true;
+        public string Message { get; set; } = string.Empty;
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace unitofwork_core.Model.Shipper
+﻿using unitofwork_core.Model.Wallet;
+
+namespace unitofwork_core.Model.Shipper
 {
     public class ResponseShipperModel
     {
@@ -16,5 +18,7 @@
         public double DestinationLatitude { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
+
+        public List<ResponseWalletModel>? Wallets { get; set; }
     }
 }

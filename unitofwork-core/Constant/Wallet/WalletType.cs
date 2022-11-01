@@ -2,7 +2,8 @@
 {
     public static class WalletType
     {
-        public static string DEFAULT = "DEFAULT";
-        public static string PROMOTION = "PROMOTION";
+        public const string DEFAULT = "DEFAULT";
+        public const string PROMOTION = "PROMOTION";
+        public const string SYSTEM = "SYSTEM";
     }
 }

@@ -9,6 +9,10 @@ namespace unitofwork_core.Core.IConfiguraton
         IAdminRepository Admins {get;}
         IOrderRepository Orders {get;}
         IWalletRepository Wallets {get;}
+        IOrderRoutingRepository OrderRoutings {get;}
+        IProductRepository Products {get;}
+        ITransactionRepository Transactions {get;}
+
         Task CompleteAsync();
         void Complete();
     }

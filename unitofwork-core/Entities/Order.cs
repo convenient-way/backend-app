@@ -13,6 +13,7 @@ namespace unitofwork_core.Entities
         public double Volume { get; set; }
         public double Weight { get; set; }
         public string Status { get; set; } = string.Empty;
+        public decimal Price { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         #region Relationship

@@ -1,4 +1,7 @@
-﻿namespace unitofwork_core.Entities
+﻿using unitofwork_core.Constant.Wallet;
+using unitofwork_core.Model.Wallet;
+
+namespace unitofwork_core.Entities
 {
     public class Wallet : BaseEntity
     {
@@ -20,6 +23,17 @@
         public Wallet()
         {
             Transactions = new List<Transaction>();
+        }
+
+        public ResponseWalletModel ToResponseModel() {
+            ResponseWalletModel model = new ResponseWalletModel();
+            model.Id = this.Id;
+            model.Balance = Balance;
+            model.WalletType = this.WalletType;
+            model.Status = this.Status;
+            model.Description = this.Description;
+            model.ModifiedAt = this.ModifiedAt;
+            return model;
         }
     }
 }

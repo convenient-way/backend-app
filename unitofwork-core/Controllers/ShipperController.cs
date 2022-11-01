@@ -19,6 +19,26 @@ namespace unitofwork_core.Controllers
             _logger = logger;
         }
 
+        [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Get shipper with id")]
+        public async Task<ActionResult<ApiResponse<ResponseShipperModel>>> GetShipperId(Guid id)
+        {
+            try
+            {
+                ResponseShipperModel? shopResponse = await _shipperService.GetShipperId(id);
+                return Ok(new ApiResponse<ResponseShipperModel>
+                {
+                    Message = "Lấy thông tin thành công",
+                    Data = shopResponse
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Register shipper has exception : " + ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("register")]
         [SwaggerOperation(Summary = "Register shipper")]
         public async Task<ActionResult<ApiResponse<ResponseShipperModel>>> Register(RegisterShipperModel model)

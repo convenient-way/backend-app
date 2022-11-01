@@ -13,13 +13,14 @@ builder.Services.AddControllers().AddNewtonsoftJson(options => {
 });
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddCorsApp();
 #region DI App
 builder.Services.AddDIServiceApp();
 #endregion
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerApp();
 
 var app = builder.Build();
 
@@ -32,6 +33,8 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowAllHeaders");
 
 app.MapControllers();
 

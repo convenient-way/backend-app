@@ -55,5 +55,7 @@ namespace unitofwork_core.Service.ShopService
             await _unitOfWork.CompleteAsync();
             return shop.ToResponseModel();
         }
+
+        
     }
 }

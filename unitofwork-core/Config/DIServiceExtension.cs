@@ -3,6 +3,8 @@ using unitofwork_core.Data;
 using unitofwork_core.Helper;
 using unitofwork_core.Service.AdminService;
 using unitofwork_core.Service.AuthorizeService;
+using unitofwork_core.Service.DatabaseService;
+using unitofwork_core.Service.Goong;
 using unitofwork_core.Service.MapboxService;
 using unitofwork_core.Service.OrderService;
 using unitofwork_core.Service.ShipperService;
@@ -20,7 +22,9 @@ namespace unitofwork_core.Config
             services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<IAuthorizeService, AuthorizeService>();
             services.AddTransient<IMapboxService, MapboxService>();
+            services.AddTransient<IGoongService, GoongService>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IDatabaseService, DatabaseService>();
         }
     }
 }

@@ -8,6 +8,7 @@ namespace unitofwork_core.Entities.Configuration
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.ToTable("Order");
+            builder.Property(w => w.Price).HasColumnType("decimal(10,0)");
             builder.Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE()").ValueGeneratedOnAdd();
             builder.Property(u => u.ModifiedAt)
                 .HasDefaultValueSql("GETDATE()").ValueGeneratedOnAddOrUpdate();

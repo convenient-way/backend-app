@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GeoCoordinatePortable;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using unitofwork_core.Model.ApiResponse;
@@ -39,7 +40,7 @@ namespace unitofwork_core.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("direction")]
         public async Task<ActionResult<ApiResponse<JObject>>> DirectionApi(DirectionApiModel model)
         {
             try
@@ -49,6 +50,26 @@ namespace unitofwork_core.Controllers
                     Success = directionApi == null ? false : true,
                     Message = directionApi == null ? "Thông tin tọa độ bị sai" : "Lấy thông tin thành công từ Mapbox",
                     Data = directionApi,
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception api mapbox : " + ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("poly-line")]
+        public async Task<ActionResult<ApiResponse<ResponsePolyLineModel>>> PolyLineApi(DirectionApiModel model)
+        {
+            try
+            {
+                ResponsePolyLineModel polyLineModel = await _mapboxService.GetPolyLine(model);
+                return Ok(new ApiResponse<ResponsePolyLineModel>
+                {
+                    Success = polyLineModel == null ? false : true,
+                    Message = polyLineModel == null ? "Thông tin tọa độ bị sai" : "Lấy thông tin thành công từ Mapbox",
+                    Data = polyLineModel,
                 });
             }
             catch (Exception ex)

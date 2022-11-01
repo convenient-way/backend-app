@@ -1,4 +1,4 @@
-﻿/*using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using unitofwork_core.Service.DatabaseService;
 
@@ -22,7 +22,8 @@ namespace unitofwork_core.Controllers
                 _logger.LogInformation("Generate data success.");
                 return Ok("Generate data success");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError("Remove data has failed : " + ex.Message);
                 return StatusCode(500, ex.Message);
             }
@@ -43,4 +44,3 @@ namespace unitofwork_core.Controllers
         }
     }
 }
-*/

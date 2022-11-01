@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
@@ -31,6 +33,7 @@ namespace unitofwork_core.Service.ShipperService
             shipper.PhoneNumber = model.PhoneNumber;
             shipper.PhotoUrl = model.PhotoUrl;
             shipper.Status = model.Status;
+            shipper.Gender = model.Gender;
             shipper.Address = model.Address;
             shipper.HomeLongitude = model.HomeLongitude;
             shipper.HomeLatitude = model.HomeLatitude;
@@ -56,6 +59,17 @@ namespace unitofwork_core.Service.ShipperService
             await _shipperRepo.InsertAsync(shipper);
             await _unitOfWork.CompleteAsync();
             return shipper.ToResponseModel();
+        }
+
+        public async Task<ResponseShipperModel?> GetShipperId(Guid shipperId)
+        {
+            ResponseShipperModel? model = null;
+            #region Includable shipper
+            Func<IQueryable<Shipper>, IIncludableQueryable<Shipper, object?>> include = (shipper) => shipper.Include(sh => sh.Wallets);
+            #endregion
+            Shipper? shipper = await _shipperRepo.GetByIdAsync(id: shipperId, include: include);
+            if(shipper != null) model = shipper.ToResponseModel();
+            return model;
         }
     }
 }

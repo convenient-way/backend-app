@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using unitofwork_core.Model.Shipper;
+using unitofwork_core.Model.Wallet;
 
 namespace unitofwork_core.Entities
 {
     public class Shipper : Actor
     {
+        public string Gender { get; set; }
         public double HomeLongitude { get; set; }
         public double HomeLatitude { get; set; }
         public double DestinationLongitude { get; set; }
@@ -37,6 +39,14 @@ namespace unitofwork_core.Entities
             model.DestinationLatitude = this.DestinationLatitude;
             model.CreatedAt = this.CreatedAt;
             model.ModifiedAt = this.ModifiedAt;
+            if (this.Wallets != null) {
+                model.Wallets = new List<ResponseWalletModel>();
+                int countWallet = this.Wallets.Count;
+                for (int i = 0; i < countWallet; i++)
+                {
+                    model.Wallets.Add(this.Wallets[i].ToResponseModel());
+                }
+            }
             return model;
         }
     }
