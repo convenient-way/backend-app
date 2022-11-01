@@ -38,13 +38,13 @@ namespace unitofwork_core.Service.ShopService
             {
                 WalletType = WalletType.DEFAULT,
                 Status = WalletStatus.ACTIVE,
-                ShipperId = shop.Id
+                ShopId = shop.Id
             };
             Wallet promotionWallet = new Wallet
             {
                 WalletType = WalletType.PROMOTION,
                 Status = WalletStatus.ACTIVE,
-                ShipperId = shop.Id
+                ShopId = shop.Id
             };
             List<Wallet> wallets = new List<Wallet> {
                 defaultWallet, promotionWallet
