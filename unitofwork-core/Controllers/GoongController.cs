@@ -60,5 +60,26 @@ namespace unitofwork_core.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("geocoding")]
+        [SwaggerOperation(summary: "Geocoding coordinate")]
+        public async Task<IActionResult> GeocodingApi(double longitude = 106.8104692523854, double latitude = 10.840967162054827)
+        {
+            try
+            {
+                JObject searchObject = await _goongService.GeocodingApi(longitude, latitude);
+                return Ok(new ApiResponse<JObject>
+                {
+                    Message = "Tìm kiếm",
+                    Data = searchObject,
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception api goongng : " + ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

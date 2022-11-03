@@ -32,6 +32,26 @@ namespace unitofwork_core.Service.Goong
             return result;
         }
 
+        public async Task<JObject> GeocodingApi(double longitude = 106.8104692523854, double latitude = 10.840967162054827)
+        {
+            JObject result;
+            HttpClient client = new HttpClient();
+            string endUri = "&latlng=" + latitude + "," + longitude;
+            HttpRequestMessage request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(_configuration["Goong:uriGeocoding"] + endUri)
+            };
+            _logger.LogInformation("Request goong uri: " + request.RequestUri);
+            using (var response = await client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                string body = await response.Content.ReadAsStringAsync();
+                result = JObject.Parse(body);
+            }
+            return result;
+        }
+
         public async Task<JObject> SearchApi(string search, double longitude, double latitude)
         {
             JObject result;
