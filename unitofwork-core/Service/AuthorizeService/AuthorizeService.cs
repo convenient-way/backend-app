@@ -3,7 +3,8 @@ using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
 using unitofwork_core.Helper;
-using unitofwork_core.Model.Authorize;
+using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.AuthorizeModel;
 
 namespace unitofwork_core.Service.AuthorizeService
 {
@@ -26,7 +27,7 @@ namespace unitofwork_core.Service.AuthorizeService
             _jwtHelper = jwtHelper;
         }
 
-        public async Task<ResponseLoginModel> Login(LoginModel model,bool isShop,bool isShipper,bool isAdmin)
+        public async Task<ApiResponse<ResponseLoginModel>> Login(LoginModel model,bool isShop,bool isShipper,bool isAdmin)
         {
             Actor? userExist = null;
             if (isShipper) {
@@ -45,11 +46,20 @@ namespace unitofwork_core.Service.AuthorizeService
                 Admin? admin = await _adminRepo.GetSingleOrDefaultAsync(predicate);
                 userExist = admin;
             }
-            ResponseLoginModel reponse = new ResponseLoginModel();
-            if (userExist != null) { 
-                reponse.Token = _jwtHelper.generateJwtToken(userExist);  
+            ApiResponse<ResponseLoginModel> response = new ApiResponse<ResponseLoginModel> ();
+            ResponseLoginModel responseLoginModel = new ResponseLoginModel();
+            if (userExist != null) {
+                responseLoginModel.Token = _jwtHelper.generateJwtToken(userExist);
+                response.Message = "Đăng nhập thành công";
+                response.Data = responseLoginModel;
             }
-            return reponse;
+            else
+            {
+                response.Success = false;
+                response.Message = "Sai tên tài khoản hoặc mật khẩu";
+            }
+
+            return response;
         }
     }
 }

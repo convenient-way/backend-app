@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using unitofwork_core.Model.ApiResponse;
-using unitofwork_core.Model.Mapbox;
+using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.MapboxModel;
 using unitofwork_core.Service.MapboxService;
 
 namespace unitofwork_core.Controllers
@@ -60,12 +60,12 @@ namespace unitofwork_core.Controllers
         }
 
         [HttpPost("poly-line")]
-        public async Task<ActionResult<ApiResponse<ResponsePolyLineModel>>> PolyLineApi(DirectionApiModel model)
+        public async Task<ActionResult<ApiResponse<List<ResponsePolyLineModel>>>> PolyLineApi(DirectionApiModel model)
         {
             try
             {
-                ResponsePolyLineModel polyLineModel = await _mapboxService.GetPolyLine(model);
-                return Ok(new ApiResponse<ResponsePolyLineModel>
+                List<ResponsePolyLineModel> polyLineModel = await _mapboxService.GetPolyLine(model);
+                return Ok(new ApiResponse<List<ResponsePolyLineModel>>
                 {
                     Success = polyLineModel == null ? false : true,
                     Message = polyLineModel == null ? "Thông tin tọa độ bị sai" : "Lấy thông tin thành công từ Mapbox",

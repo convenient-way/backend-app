@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using unitofwork_core.Entities;
-using unitofwork_core.Model.Collection;
+using unitofwork_core.Model.CollectionModel;
 
 namespace unitofwork_core.Core.IRepository
 {
@@ -21,7 +21,7 @@ namespace unitofwork_core.Core.IRepository
         Task<IList<TEntity>> GetAllAsync();
         Task<TEntity?> GetByIdAsync(Guid id);
         Task<TEntity?> GetByIdAsync(Guid id, Func<IQueryable<TEntity>,
-            IIncludableQueryable<TEntity, object?>>? include = null, bool disableTranking = true);
+            IIncludableQueryable<TEntity, object?>>? include = null, bool disableTracking = true);
         Task<TEntity> InsertAsync(TEntity entity);
         Task InsertAsync(IEnumerable<TEntity> entities);
         Task InsertAsync(IList<TEntity> entities);

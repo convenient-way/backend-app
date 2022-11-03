@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using unitofwork_core.Model.ApiResponse;
-using unitofwork_core.Model.Authorize;
-using unitofwork_core.Model.Shipper;
+using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.AuthorizeModel;
+using unitofwork_core.Model.ShipperModel;
 using unitofwork_core.Service.AuthorizeService;
 
 namespace unitofwork_core.Controllers
@@ -25,12 +25,11 @@ namespace unitofwork_core.Controllers
         {
             try
             {
-                ResponseLoginModel loginResponse = await _authorizeService.Login(model, isShop, isShipper, isAdmin);
-                return Ok(new ApiResponse<ResponseLoginModel>
-                {
-                    Message = loginResponse.Token != null ? "Token đã được tạo" : "Sai tên tài khoản hoặc mật khẩu",
-                    Data = loginResponse
-                });
+                ApiResponse<ResponseLoginModel> loginResponse = await _authorizeService.Login(model, isShop, isShipper, isAdmin);
+                if (loginResponse.Success == false) {
+                    return BadRequest(loginResponse);
+                }
+                return Ok(loginResponse);
             }
             catch (Exception ex)
             {

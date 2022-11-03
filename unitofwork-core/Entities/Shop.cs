@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using unitofwork_core.Model.Shipper;
-using unitofwork_core.Model.Shop;
+using unitofwork_core.Model.ShipperModel;
+using unitofwork_core.Model.ShopModel;
 
 namespace unitofwork_core.Entities
 {
@@ -11,12 +11,12 @@ namespace unitofwork_core.Entities
 
         #region Relationship
         public IList<Wallet> Wallets { get; set; }
-        public IList<Order> Orders { get; set; }
+        public IList<Package> Packages { get; set; }
         #endregion
         public Shop()
         {
             Wallets = new List<Wallet>();
-            Orders = new List<Order>();
+            Packages = new List<Package>();
         }
 
         public ResponseShopModel ToResponseModel()

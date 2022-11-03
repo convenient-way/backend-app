@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using unitofwork_core.Model.Shipper;
-using unitofwork_core.Model.Wallet;
+using unitofwork_core.Model.ShipperModel;
+using unitofwork_core.Model.WalletModel;
 
 namespace unitofwork_core.Entities
 {
     public class Shipper : Actor
     {
-        public string Gender { get; set; }
+        public string Gender { get; set; } = String.Empty;
         public double HomeLongitude { get; set; }
         public double HomeLatitude { get; set; }
         public double DestinationLongitude { get; set; }
@@ -14,12 +14,12 @@ namespace unitofwork_core.Entities
 
         #region Relationship
         public IList<Wallet> Wallets { get; set; }
-        public IList<Order> Orders { get; set; }
+        public IList<Package> Packages { get; set; }
         #endregion
         public Shipper()
         {
             Wallets = new List<Wallet>();
-            Orders = new List<Order>();
+            Packages = new List<Package>();
         }
 
         public ResponseShipperModel ToResponseModel()

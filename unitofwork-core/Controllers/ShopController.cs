@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using unitofwork_core.Model.ApiResponse;
-using unitofwork_core.Model.Shop;
+using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.ShopModel;
 using unitofwork_core.Service.ShopService;
 
 namespace unitofwork_core.Controllers

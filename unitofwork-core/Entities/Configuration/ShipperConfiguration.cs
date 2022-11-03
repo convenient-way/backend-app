@@ -13,7 +13,7 @@ namespace unitofwork_core.Entities.Configuration
             builder.Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE()").ValueGeneratedOnAdd();
             builder.Property(u => u.ModifiedAt)
                 .HasDefaultValueSql("GETDATE()").ValueGeneratedOnAddOrUpdate();
-            builder.HasMany(sh => sh.Orders)
+            builder.HasMany(sh => sh.Packages)
                 .WithOne(or => or.Shipper).HasForeignKey(or => or.ShipperId);
             builder.HasMany(sh => sh.Wallets)
                  .WithOne(wl => wl.Shipper).HasForeignKey(wl => wl.ShipperId);

@@ -3,7 +3,7 @@ using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
-using unitofwork_core.Model.Shop;
+using unitofwork_core.Model.ShopModel;
 
 namespace unitofwork_core.Service.ShopService
 {

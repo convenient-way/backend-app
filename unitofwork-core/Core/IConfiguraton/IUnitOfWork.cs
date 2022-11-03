@@ -1,4 +1,6 @@
 ﻿using unitofwork_core.Core.IRepository;
+using unitofwork_core.Core.Repository;
+using unitofwork_core.Entities;
 
 namespace unitofwork_core.Core.IConfiguraton
 {
@@ -7,13 +9,14 @@ namespace unitofwork_core.Core.IConfiguraton
         IShopRepository Shops {get;}
         IShipperRepository Shippers {get;}
         IAdminRepository Admins {get;}
-        IOrderRepository Orders {get;}
+        IPackageRepository Packages {get;}
+        IHistoryPackageRepostiory HistoryPackages {get;}
+        IConfigRepostiory ConfigApps { get; }
         IWalletRepository Wallets {get;}
-        IOrderRoutingRepository OrderRoutings {get;}
         IProductRepository Products {get;}
         ITransactionRepository Transactions {get;}
 
-        Task CompleteAsync();
-        void Complete();
+        Task<int> CompleteAsync();
+        int Complete();
     }
 }

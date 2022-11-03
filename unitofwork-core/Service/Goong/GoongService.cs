@@ -13,6 +13,25 @@ namespace unitofwork_core.Service.Goong
             _logger = logger;
         }
 
+        public async Task<JObject> DetailPlaceApi(string placeId)
+        {
+            JObject result;
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(_configuration["Goong:uriDetail"] + placeId)
+            };
+            _logger.LogInformation("Request goong uri: " + request.RequestUri);
+            using (var response = await client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                string body = await response.Content.ReadAsStringAsync();
+                result = JObject.Parse(body);
+            }
+            return result;
+        }
+
         public async Task<JObject> SearchApi(string search, double longitude, double latitude)
         {
             JObject result;
@@ -27,7 +46,7 @@ namespace unitofwork_core.Service.Goong
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(_configuration["Goong:uriSearch"] + endUri)
             };
-            _logger.LogDebug("Request goong uri: " + request.RequestUri);
+            _logger.LogInformation("Request goong uri: " + request.RequestUri);
             using (var response = await client.SendAsync(request))
             {
                 response.EnsureSuccessStatusCode();

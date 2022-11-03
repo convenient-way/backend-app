@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using unitofwork_core.Model.Admin;
-using unitofwork_core.Model.ApiResponse;
+using unitofwork_core.Model.AdminModel;
+using unitofwork_core.Model.ApiResponseModel;
 using unitofwork_core.Service.AdminService;
 
 namespace unitofwork_core.Controllers

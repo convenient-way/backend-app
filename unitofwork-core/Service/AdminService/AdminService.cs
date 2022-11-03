@@ -2,7 +2,7 @@
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
-using unitofwork_core.Model.Admin;
+using unitofwork_core.Model.AdminModel;
 
 namespace unitofwork_core.Service.AdminService
 {

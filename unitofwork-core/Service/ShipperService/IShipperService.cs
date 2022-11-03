@@ -1,4 +1,4 @@
-﻿using unitofwork_core.Model.Shipper;
+﻿using unitofwork_core.Model.ShipperModel;
 
 namespace unitofwork_core.Service.ShipperService
 {

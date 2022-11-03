@@ -5,7 +5,7 @@ using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
-using unitofwork_core.Model.Shipper;
+using unitofwork_core.Model.ShipperModel;
 
 namespace unitofwork_core.Service.ShipperService
 {
@@ -43,7 +43,8 @@ namespace unitofwork_core.Service.ShipperService
             Wallet defaultWallet = new Wallet {
                 WalletType = WalletType.DEFAULT,
                 Status = WalletStatus.ACTIVE,
-                ShipperId = shipper.Id
+                ShipperId = shipper.Id,
+                Balance = 100000
             };
             Wallet promotionWallet = new Wallet
             {

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using unitofwork_core.Constant.Order;
 using unitofwork_core.Model.ApiResponse;
@@ -21,10 +21,10 @@ namespace unitofwork_core.Controllers
         }
 
         [HttpGet("suggest-pakage")]
-        public async Task<ActionResult<ApiResponse<List<ResponseOrderModel>>>> SuggestPakage(Guid shipperId)
+        public async Task<ActionResult<ApiResponse<List<ResponseOrderModel>>>> SuggestPackage(Guid shipperId)
         {
             try {
-                List<ResponseOrderModel> orders = await _orderService.SuggestPakage(shipperId);
+                List<ResponseOrderModel> orders = await _orderService.SuggestPackage(shipperId);
                 return Ok(new ApiResponse<List<ResponseOrderModel>> { 
                     Message = "Đơn hàng đề xuất cho shipepr",
                     Data = orders
@@ -64,7 +64,7 @@ namespace unitofwork_core.Controllers
             {
                 if (model.Status == OrderStatus.DELIVERY)
                 {
-                    ApiResponse<bool> response = await _orderService.PickUpPakage(model.Shipper, model.OrderId);
+                    ApiResponse<bool> response = await _orderService.PickUpPackage(model.Shipper, model.OrderId);
                     return Ok(response);
                 }
                 return BadRequest(new ApiResponse { 
@@ -80,4 +80,4 @@ namespace unitofwork_core.Controllers
         }
 
     }
-}
+}*/

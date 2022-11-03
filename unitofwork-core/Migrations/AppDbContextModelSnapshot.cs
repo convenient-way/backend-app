@@ -93,7 +93,34 @@ namespace unitofwork_core.Migrations
                     b.ToTable("Admin", (string)null);
                 });
 
-            modelBuilder.Entity("unitofwork_core.Entities.HistoryOrder", b =>
+            modelBuilder.Entity("unitofwork_core.Entities.ConfigApp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Config", (string)null);
+                });
+
+            modelBuilder.Entity("unitofwork_core.Entities.HistoryPackage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,7 +139,7 @@ namespace unitofwork_core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid>("PackageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ToStatus")
@@ -121,41 +148,64 @@ namespace unitofwork_core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("PackageId");
 
-                    b.ToTable("HistoryOrder", (string)null);
+                    b.ToTable("HistoryPackage", (string)null);
                 });
 
-            modelBuilder.Entity("unitofwork_core.Entities.Order", b =>
+            modelBuilder.Entity("unitofwork_core.Entities.Package", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DestinationAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("DestinationLatitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("DestinationLongitude")
+                        .HasColumnType("float");
 
                     b.Property<double>("Distance")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("NumberPackage")
-                        .HasColumnType("int");
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PriceShip")
                         .HasColumnType("decimal(10,0)");
+
+                    b.Property<string>("ReceiverName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiverPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ShipperId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ShopId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StartAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("StartLatitude")
                         .HasColumnType("float");
@@ -179,48 +229,7 @@ namespace unitofwork_core.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Order", (string)null);
-                });
-
-            modelBuilder.Entity("unitofwork_core.Entities.OrderRouting", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Distance")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("RoutingIndex")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ToLatitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ToLongitude")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderRouting", (string)null);
+                    b.ToTable("Package", (string)null);
                 });
 
             modelBuilder.Entity("unitofwork_core.Entities.Product", b =>
@@ -237,12 +246,15 @@ namespace unitofwork_core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OrderRoutingId")
+                    b.Property<Guid>("PackageId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,0)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderRoutingId");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Product", (string)null);
                 });
@@ -406,7 +418,7 @@ namespace unitofwork_core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid?>("PackageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -422,7 +434,7 @@ namespace unitofwork_core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("PackageId");
 
                     b.HasIndex("WalletId");
 
@@ -468,25 +480,25 @@ namespace unitofwork_core.Migrations
                     b.ToTable("Wallet", (string)null);
                 });
 
-            modelBuilder.Entity("unitofwork_core.Entities.HistoryOrder", b =>
+            modelBuilder.Entity("unitofwork_core.Entities.HistoryPackage", b =>
                 {
-                    b.HasOne("unitofwork_core.Entities.Order", "Order")
-                        .WithMany("HistoryOrders")
-                        .HasForeignKey("OrderId")
+                    b.HasOne("unitofwork_core.Entities.Package", "Package")
+                        .WithMany("HistoryPackages")
+                        .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
+                    b.Navigation("Package");
                 });
 
-            modelBuilder.Entity("unitofwork_core.Entities.Order", b =>
+            modelBuilder.Entity("unitofwork_core.Entities.Package", b =>
                 {
                     b.HasOne("unitofwork_core.Entities.Shipper", "Shipper")
-                        .WithMany("Orders")
+                        .WithMany("Packages")
                         .HasForeignKey("ShipperId");
 
                     b.HasOne("unitofwork_core.Entities.Shop", "Shop")
-                        .WithMany("Orders")
+                        .WithMany("Packages")
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -496,33 +508,23 @@ namespace unitofwork_core.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("unitofwork_core.Entities.OrderRouting", b =>
-                {
-                    b.HasOne("unitofwork_core.Entities.Order", "Order")
-                        .WithMany("OrderRoutings")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("unitofwork_core.Entities.Product", b =>
                 {
-                    b.HasOne("unitofwork_core.Entities.OrderRouting", "OrderRouting")
+                    b.HasOne("unitofwork_core.Entities.Package", "Package")
                         .WithMany("Products")
-                        .HasForeignKey("OrderRoutingId")
+                        .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrderRouting");
+                    b.Navigation("Package");
                 });
 
             modelBuilder.Entity("unitofwork_core.Entities.Transaction", b =>
                 {
-                    b.HasOne("unitofwork_core.Entities.Order", "Order")
+                    b.HasOne("unitofwork_core.Entities.Package", "Package")
                         .WithMany("Transactions")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("unitofwork_core.Entities.Wallet", "Wallet")
                         .WithMany("Transactions")
@@ -530,7 +532,7 @@ namespace unitofwork_core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
+                    b.Navigation("Package");
 
                     b.Navigation("Wallet");
                 });
@@ -550,30 +552,25 @@ namespace unitofwork_core.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("unitofwork_core.Entities.Order", b =>
+            modelBuilder.Entity("unitofwork_core.Entities.Package", b =>
                 {
-                    b.Navigation("HistoryOrders");
+                    b.Navigation("HistoryPackages");
 
-                    b.Navigation("OrderRoutings");
+                    b.Navigation("Products");
 
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("unitofwork_core.Entities.OrderRouting", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("unitofwork_core.Entities.Shipper", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Packages");
 
                     b.Navigation("Wallets");
                 });
 
             modelBuilder.Entity("unitofwork_core.Entities.Shop", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Packages");
 
                     b.Navigation("Wallets");
                 });

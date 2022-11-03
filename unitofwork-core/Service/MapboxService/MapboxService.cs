@@ -1,7 +1,7 @@
 ﻿using GeoCoordinatePortable;
 using Newtonsoft.Json.Linq;
 using unitofwork_core.Entities;
-using unitofwork_core.Model.Mapbox;
+using unitofwork_core.Model.MapboxModel;
 
 namespace unitofwork_core.Service.MapboxService
 {
@@ -53,9 +53,9 @@ namespace unitofwork_core.Service.MapboxService
             return result;
         }
 
-        public async Task<ResponsePolyLineModel> GetPolyLine(DirectionApiModel model)
+        public async Task<List<ResponsePolyLineModel>> GetPolyLine(DirectionApiModel model)
         {
-            PolyLineModel result;
+            List<ResponsePolyLineModel> result;
             JObject bodyResponse;
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage
@@ -69,15 +69,15 @@ namespace unitofwork_core.Service.MapboxService
                 response.EnsureSuccessStatusCode();
                 string body = await response.Content.ReadAsStringAsync();
                 bodyResponse = JObject.Parse(body);
-                result = new PolyLineModel(bodyResponse);
-                _logger.LogDebug("Time: " + result.Time + ", " + "Distance: " + result.Distance + " \n"
-                    + "From name: " + result.FromName + ", " + "To name: " + result.ToName);
+                result = PolyLineModel.GetLines(bodyResponse);
+                _logger.LogDebug("Time: " + result[0].Time + ", " + "Distance: " + result[0].Distance + " \n"
+                    + "From name: " + result[0].FromName + ", " + "To name: " + result[0].ToName);
 
             }
-            return result.ToResponseModel();
+            return result;
         }
 
-        public async Task<PolyLineModel> GetPolyLine(GeoCoordinate From, GeoCoordinate To)
+        public async Task<PolyLineModel> GetPolyLineModel(GeoCoordinate From, GeoCoordinate To)
         {
             PolyLineModel result;
             JObject bodyResponse;
@@ -94,11 +94,13 @@ namespace unitofwork_core.Service.MapboxService
                 string body = await response.Content.ReadAsStringAsync();
                 bodyResponse = JObject.Parse(body);
                 result = new PolyLineModel(bodyResponse);
-                _logger.LogDebug("Time: " + result.Time + ", " + "Distance: " + result.Distance + " \n"
+                _logger.LogInformation("Time: " + result.Time + ", " + "Distance: " + result.Distance + " \n"
                     + "From name: " + result.FromName + ", " + "To name: " + result.ToName);
 
             }
             return result;
         }
+
+       
     }
 }

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Data;
 using unitofwork_core.Entities;
-using unitofwork_core.Model.Collection;
+using unitofwork_core.Model.CollectionModel;
 
 namespace unitofwork_core.Core.Repository
 {

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using unitofwork_core.Model.Admin;
+using unitofwork_core.Model.AdminModel;
 
 namespace unitofwork_core.Entities
 {

@@ -15,10 +15,9 @@ namespace unitofwork_core.Data
         public virtual DbSet<Admin> Admins => Set<Admin>();
         public virtual DbSet<Shipper> Shipper => Set<Shipper>();
         public virtual DbSet<Shop> Shops => Set<Shop>();
-        public virtual DbSet<HistoryOrder> HistoryOrders => Set<HistoryOrder>();
+        public virtual DbSet<Package> Packages => Set<Package>();
         public virtual DbSet<Product> Products => Set<Product>();
-        public virtual DbSet<Order> Orders => Set<Order>();
-        public virtual DbSet<OrderRouting> OrderRoutings => Set<OrderRouting>();
+        public virtual DbSet<ConfigApp> ConfigApps => Set<ConfigApp>();
         public virtual DbSet<Transaction> Transactions => Set<Transaction>();
         public virtual DbSet<Wallet> Wallets => Set<Wallet>();
         #endregion

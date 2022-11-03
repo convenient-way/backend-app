@@ -1,6 +1,6 @@
 ﻿using GeoCoordinatePortable;
 using Newtonsoft.Json.Linq;
-using unitofwork_core.Model.Mapbox;
+using unitofwork_core.Model.MapboxModel;
 
 namespace unitofwork_core.Service.MapboxService
 {
@@ -8,7 +8,7 @@ namespace unitofwork_core.Service.MapboxService
     {
         Task<JObject> DirectionApi(DirectionApiModel model);
         Task<JObject> SearchApi(string search);
-        Task<ResponsePolyLineModel> GetPolyLine(DirectionApiModel model);
-        Task<PolyLineModel> GetPolyLine(GeoCoordinate From, GeoCoordinate To);
+        Task<List<ResponsePolyLineModel>> GetPolyLine(DirectionApiModel model);
+        Task<PolyLineModel> GetPolyLineModel(GeoCoordinate From, GeoCoordinate To);
     }
 }

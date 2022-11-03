@@ -1,5 +1,5 @@
 ﻿using unitofwork_core.Constant.Wallet;
-using unitofwork_core.Model.Wallet;
+using unitofwork_core.Model.WalletModel;
 
 namespace unitofwork_core.Entities
 {

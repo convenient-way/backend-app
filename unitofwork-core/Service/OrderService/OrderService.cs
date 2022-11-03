@@ -1,4 +1,4 @@
-﻿using GeoCoordinatePortable;
+﻿/*using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
@@ -59,7 +59,7 @@ namespace unitofwork_core.Service.OrderService
             return false;
         }
 
-        public async Task<ApiResponse<bool>> PickUpPakage(Guid shipperId, Guid orderId, string walletType = WalletType.DEFAULT) {
+        public async Task<ApiResponse<bool>> PickUpPackage(Guid shipperId, Guid orderId, string walletType = WalletType.DEFAULT) {
             Shipper? shipper = await _shipperRepo.GetByIdAsync(shipperId, disableTranking: false);
             Order? order = await _orderRepo.GetByIdAsync(orderId, disableTranking: false);
 
@@ -160,7 +160,7 @@ namespace unitofwork_core.Service.OrderService
             return order.ToResponseModel();
         }
 
-        public async Task<List<ResponseOrderModel>> SuggestPakage(Guid shiperId)
+        public async Task<List<ResponseOrderModel>> SuggestPackage(Guid shiperId)
         {
             List<ResponseOrderModel> result = new List<ResponseOrderModel>();
             Shipper? shipper = await _shipperRepo.GetByIdAsync(shiperId);
@@ -178,14 +178,14 @@ namespace unitofwork_core.Service.OrderService
                 int orderCount = orders.Count;
                 for (int i = 0; i < orderCount; i++)
                 {
-                    bool isValidOrder = ValidDestinationBetweenShipperLineAndPakage(polyLineShipper, orders[i]);
+                    bool isValidOrder = ValidDestinationBetweenShipperLineAndPackage(polyLineShipper, orders[i]);
                     if (isValidOrder) result.Add(orders[i].ToResponseModel());
                 }
             }
             return result;
         }
 
-        public bool ValidDestinationBetweenShipperLineAndPakage(PolyLineModel polyLine, Order order, double spacingValid = 2000) {
+        public bool ValidDestinationBetweenShipperLineAndPackage(PolyLineModel polyLine, Order order, double spacingValid = 2000) {
             bool result = false;
             List<GeoCoordinate>? geoCoordinateList = polyLine.PolyPoints;
             if (geoCoordinateList != null) {
@@ -219,3 +219,4 @@ namespace unitofwork_core.Service.OrderService
         }
     }
 }
+*/

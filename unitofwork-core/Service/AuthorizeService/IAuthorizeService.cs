@@ -1,9 +1,10 @@
-﻿using unitofwork_core.Model.Authorize;
+﻿using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.AuthorizeModel;
 
 namespace unitofwork_core.Service.AuthorizeService
 {
     public interface IAuthorizeService
     {
-        Task<ResponseLoginModel> Login(LoginModel model,bool isShop,bool isShipper,bool isAdmin); 
+        Task<ApiResponse<ResponseLoginModel>> Login(LoginModel model,bool isShop,bool isShipper,bool isAdmin); 
     }
 }

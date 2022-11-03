@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using unitofwork_core.Model.ApiResponse;
-using unitofwork_core.Model.Shipper;
+using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.ShipperModel;
 using unitofwork_core.Service.ShipperService;
 
 namespace unitofwork_core.Controllers

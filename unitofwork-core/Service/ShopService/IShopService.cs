@@ -1,4 +1,4 @@
-﻿using unitofwork_core.Model.Shop;
+﻿using unitofwork_core.Model.ShopModel;
 
 namespace unitofwork_core.Service.ShopService
 {
