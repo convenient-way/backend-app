@@ -612,7 +612,7 @@ namespace unitofwork_core.Service.PackageService
             history.Description = "Shipper giao hàng thành công vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
             history.PackageId = package.Id;
             await _historyPackageRepo.InsertAsync(history);
-            package.Status = PackageStatus.DELIVERY_FAILED;
+            package.Status = PackageStatus.DELIVERED;
             #endregion
 
             int result = await _unitOfWork.CompleteAsync();
