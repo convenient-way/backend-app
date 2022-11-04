@@ -53,6 +53,7 @@ namespace unitofwork_core.Entities
             model.Distance = this.Distance;
             model.Volume = this.Volume;
             model.Weight = this.Weight;
+            model.Status = this.Status;
             model.PriceShip = this.PriceShip;
             model.PhotoUrl = this.PhotoUrl;
             model.Note = this.Note;

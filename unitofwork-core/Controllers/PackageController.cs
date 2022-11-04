@@ -139,11 +139,12 @@ namespace unitofwork_core.Controllers
 
         [HttpPut("shipper-pickup")]
         [SwaggerOperation(Summary = "Shipper pickup a package")]
-        public async Task<ActionResult<ApiResponse>> PickupPackage(Guid shipperId,Guid packageId, string walletType = WalletType.DEFAULT)
+        public async Task<ActionResult<ApiResponse>> PickupPackage(ShipperPickUpModel model)
         {
             try
             {
-                ApiResponse response = await _packageService.ShipperPickupPackage(shipperId,packageId, walletType);
+                ApiResponse response = await _packageService.ShipperPickupPackage(model.shipperId,
+                    model.packageId, model.walletType);
                 if (response.Success == false)
                 {
                     return BadRequest(response);
@@ -180,11 +181,12 @@ namespace unitofwork_core.Controllers
 
         [HttpPut("shipper-confirm-packages")]
         [SwaggerOperation(Summary = "Shipper confirms packages and then delivery them")]
-        public async Task<ActionResult<ApiResponseListError>> ShipperConfirmPackage(List<Guid> packageIds, Guid shipperId, string walletType = WalletType.DEFAULT)
+        public async Task<ActionResult<ApiResponseListError>> ShipperConfirmPackage(ShipperConfirmPackagesModel model)
         {
             try
             {
-                ApiResponseListError response = await _packageService.ShipperConfirmPackages(packageIds,shipperId,walletType);
+                ApiResponseListError response = await _packageService.ShipperConfirmPackages(
+                    model.packageIds, model.shipperId, model.walletType);
                 if (response.Success == false)
                 {
                     return BadRequest(response);

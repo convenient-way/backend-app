@@ -10,6 +10,7 @@ using unitofwork_core.Service.MapboxService;
 using unitofwork_core.Service.PackageService;
 using unitofwork_core.Service.ShipperService;
 using unitofwork_core.Service.ShopService;
+using unitofwork_core.Service.TransactionService;
 
 namespace unitofwork_core.Config
 {
@@ -26,6 +27,7 @@ namespace unitofwork_core.Config
             services.AddTransient<IPackageService, PackageService>();
             services.AddTransient<IHistoryPackageService, HistoryPackageService>();
             services.AddTransient<IGoongService, GoongService>();
+            services.AddTransient<ITransactionService, TransactionService>();
             services.AddTransient<IDatabaseService, DatabaseService>();
         }
     }

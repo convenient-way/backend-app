@@ -12,8 +12,8 @@ using unitofwork_core.Data;
 namespace unitofwork_core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221102083613_initdb4")]
-    partial class initdb4
+    [Migration("20221103153200_initdb")]
+    partial class initdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,33 @@ namespace unitofwork_core.Migrations
                     b.ToTable("Admin", (string)null);
                 });
 
+            modelBuilder.Entity("unitofwork_core.Entities.ConfigApp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<Guid>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Config", (string)null);
+                });
+
             modelBuilder.Entity("unitofwork_core.Entities.HistoryPackage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -161,7 +188,7 @@ namespace unitofwork_core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("PriceShip")
+                    b.Property<decimal>("PriceShip")
                         .HasColumnType("decimal(10,0)");
 
                     b.Property<string>("ReceiverName")

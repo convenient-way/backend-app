@@ -152,7 +152,7 @@ namespace unitofwork_core.Service.DatabaseService
                .RuleFor(u => u.Longitude, faker => faker.Random.Double(min: minLongitude, max: maxLongitude))
                .RuleFor(u => u.Latitude, faker => faker.Random.Double(min: minLatitude, max: maxLatitude))
                .RuleFor(u => u.PhoneNumber, faker => faker.Person.Phone);
-            List<Shop> shops = FakerShop.Generate(6);
+            List<Shop> shops = FakerShop.Generate(10);
             for (int i = 0; i < shops.Count; i++)
             {
                 Shop shopIndex = shops[i];
@@ -194,7 +194,7 @@ namespace unitofwork_core.Service.DatabaseService
                 .RuleFor(o => o.PriceShip, faker => faker.Random.Int(min: 10, max: 40) * 1000)
                 .RuleFor(o => o.Status, faker => PackageStatus.APPROVED)
                 .RuleFor(o => o.Shop, faker => faker.PickRandom(shops));
-            List<Package> packages = FakerPackage.Generate(1000);
+            List<Package> packages = FakerPackage.Generate(300);
             for (int i = 0; i < packages.Count; i++)
             {
 

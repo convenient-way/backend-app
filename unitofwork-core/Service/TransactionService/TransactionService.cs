@@ -3,6 +3,7 @@ using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
 using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.CollectionModel;
 using unitofwork_core.Model.TransactionModel;
 
 namespace unitofwork_core.Service.TransactionService
@@ -26,8 +27,8 @@ namespace unitofwork_core.Service.TransactionService
             _walletRepo = unitOfWork.Wallets;
         }
 
-        public async Task<ApiResponsePaginated<ResponseTransactionModel>> GetTransactionShipper(Guid shipperId, Guid shopId, 
-            DateOnly from, DateOnly to, int pageIndex, int pageSize)
+        public async Task<ApiResponsePaginated<ResponseTransactionModel>> GetTransactions(Guid shipperId, Guid shopId, 
+            DateTime? from, DateTime? to, int pageIndex, int pageSize)
         {
             ApiResponsePaginated<ResponseTransactionModel> response = new ApiResponsePaginated<ResponseTransactionModel>();
             #region Verify params
@@ -52,9 +53,22 @@ namespace unitofwork_core.Service.TransactionService
                                                         transaction.WalletId == shopWallets[1].Id;
                 predicates.Add(predicateShop);
             }
-     
+            if (from != null && to != null) {
+                Expression<Func<Transaction, bool>> predicateDateTime = (transaction) => transaction.CreatedAt.CompareTo(from) >= 0
+                            && transaction.CreatedAt.CompareTo(to) <= 0;
+                predicates.Add(predicateDateTime);
+            }
             #endregion
-
+            #region Order
+            Func<IQueryable<Transaction>, IOrderedQueryable<Transaction>> orderBy = (source) => source.OrderByDescending(tr => tr.CreatedAt);
+            #endregion
+            #region Selector
+            Expression<Func<Transaction, ResponseTransactionModel>> selector = (tran) => tran.ToResponseModel();
+            #endregion
+            PaginatedList<ResponseTransactionModel> result = await _transactionRepo.GetPagedListAsync<ResponseTransactionModel>(
+                predicates:predicates, orderBy: orderBy, selector: selector);
+            response.SetData(result);
+            response.ToSuccessResponse("Lấy thông tin thành công");
             return response;
         }
     }

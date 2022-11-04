@@ -6,7 +6,7 @@ namespace unitofwork_core.Service.TransactionService
 {
     public interface ITransactionService
     {
-        Task<ApiResponsePaginated<ResponseTransactionModel>> GetTransactionShipper(Guid shipperId, Guid shopId,
-            DateOnly from, DateOnly to, int pageIndex, int pageSize);
+        Task<ApiResponsePaginated<ResponseTransactionModel>> GetTransactions(Guid shipperId, Guid shopId,
+            DateTime? from, DateTime? to, int pageIndex, int pageSize);
     }
 }

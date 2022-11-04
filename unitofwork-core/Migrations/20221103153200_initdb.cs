@@ -34,6 +34,21 @@ namespace unitofwork_core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Config",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Config", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Shipper",
                 columns: table => new
                 {
@@ -94,10 +109,12 @@ namespace unitofwork_core.Migrations
                     DestinationLongitude = table.Column<double>(type: "float", nullable: false),
                     DestinationLatitude = table.Column<double>(type: "float", nullable: false),
                     Distance = table.Column<double>(type: "float", nullable: false),
+                    ReceiverName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReceiverPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Volume = table.Column<double>(type: "float", nullable: false),
                     Weight = table.Column<double>(type: "float", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PriceShip = table.Column<decimal>(type: "decimal(10,0)", nullable: true),
+                    PriceShip = table.Column<decimal>(type: "decimal(10,0)", nullable: false),
                     PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -150,7 +167,7 @@ namespace unitofwork_core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HistoryOrder",
+                name: "HistoryPackage",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -162,9 +179,9 @@ namespace unitofwork_core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HistoryOrder", x => x.Id);
+                    table.PrimaryKey("PK_HistoryPackage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HistoryOrder_Package_PackageId",
+                        name: "FK_HistoryPackage_Package_PackageId",
                         column: x => x.PackageId,
                         principalTable: "Package",
                         principalColumn: "Id",
@@ -236,8 +253,8 @@ namespace unitofwork_core.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_HistoryOrder_PackageId",
-                table: "HistoryOrder",
+                name: "IX_HistoryPackage_PackageId",
+                table: "HistoryPackage",
                 column: "PackageId");
 
             migrationBuilder.CreateIndex(
@@ -306,7 +323,10 @@ namespace unitofwork_core.Migrations
                 name: "Admin");
 
             migrationBuilder.DropTable(
-                name: "HistoryOrder");
+                name: "Config");
+
+            migrationBuilder.DropTable(
+                name: "HistoryPackage");
 
             migrationBuilder.DropTable(
                 name: "Product");

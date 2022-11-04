@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using unitofwork_core.Constant.Package;
 using unitofwork_core.Model.ProductModel;
 using PackageEntity = unitofwork_core.Entities.Package;
 
@@ -18,7 +19,6 @@ namespace unitofwork_core.Model.PackageModel
         public double Distance { get; set; }
         public double Volume { get; set; }
         public double Weight { get; set; }
-        public string Status { get; set; } = string.Empty;
         public decimal PriceShip { get; set; }
         public string PhotoUrl { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
@@ -36,7 +36,7 @@ namespace unitofwork_core.Model.PackageModel
             entity.Distance = this.Distance;
             entity.Volume = this.Volume;
             entity.Weight = this.Weight;
-            entity.Status = this.Status;
+            entity.Status = PackageStatus.WAITING;
             entity.PriceShip = this.PriceShip;
             entity.PhotoUrl = this.PhotoUrl;
             entity.Note = this.Note;
