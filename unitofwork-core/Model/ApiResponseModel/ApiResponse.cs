@@ -16,6 +16,13 @@
             Success = true;
             Message = message;
         }
+
+        public void ToSuccessResponse(T data,string message)
+        {
+            Success = true;
+            Message = message;
+            Data = data;
+        }
     }
 
     public class ApiResponse {

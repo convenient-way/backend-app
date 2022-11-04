@@ -44,7 +44,7 @@ namespace unitofwork_core.Service.ShipperService
                 WalletType = WalletType.DEFAULT,
                 Status = WalletStatus.ACTIVE,
                 ShipperId = shipper.Id,
-                Balance = 100000
+                Balance = 1000000
             };
             Wallet promotionWallet = new Wallet
             {

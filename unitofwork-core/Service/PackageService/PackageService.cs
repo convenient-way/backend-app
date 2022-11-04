@@ -265,15 +265,15 @@ namespace unitofwork_core.Service.PackageService
             }
             #endregion
 
-            package.Status = PackageStatus.APPROVED;
             #region Create history
             HistoryPackage history = new HistoryPackage();
-            history.FromStatus = PackageStatus.WAITING;
+            history.FromStatus = package.Status;
             history.ToStatus = PackageStatus.APPROVED;
             history.Description = "Đơn hàng được duyệt vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
             history.PackageId = package.Id;
             await _historyPackageRepo.InsertAsync(history);
             #endregion
+            package.Status = PackageStatus.APPROVED;
 
             int result = await _unitOfWork.CompleteAsync();
 
@@ -303,15 +303,15 @@ namespace unitofwork_core.Service.PackageService
             }
             #endregion
 
-            package.Status = PackageStatus.REJECT;
             #region Create history
             HistoryPackage history = new HistoryPackage();
-            history.FromStatus = PackageStatus.WAITING;
+            history.FromStatus = package.Status;
             history.ToStatus = PackageStatus.REJECT;
             history.Description = "Đơn hàng bị từ chối vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
             history.PackageId = package.Id;
             await _historyPackageRepo.InsertAsync(history);
             #endregion
+            package.Status = PackageStatus.REJECT;
 
             int result = await _unitOfWork.CompleteAsync();
 
@@ -361,16 +361,16 @@ namespace unitofwork_core.Service.PackageService
                 return response;
             }
             #endregion
-            package.Status = PackageStatus.SHIPPER_PICKUP;
             package.ShipperId = shipperId;
             #region Create history
             HistoryPackage history = new HistoryPackage();
-            history.FromStatus = PackageStatus.APPROVED;
+            history.FromStatus = package.Status;
             history.ToStatus = PackageStatus.SHIPPER_PICKUP;
             history.Description = "Đơn hàng được nhận vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
             history.PackageId = package.Id;
             await _historyPackageRepo.InsertAsync(history);
             #endregion
+            package.Status = PackageStatus.SHIPPER_PICKUP;
 
             int result = await _unitOfWork.CompleteAsync();
 
@@ -483,7 +483,7 @@ namespace unitofwork_core.Service.PackageService
             #region Checking packages valid
             foreach (Guid id in packageIds)
             {
-                Package? package = await _packageRepo.GetByIdAsync(id, disableTracking: false);
+                Package? package = await _packageRepo.GetByIdAsync(id,include: includePackage, disableTracking: false);
                 if (package == null)
                 {
                     // response.ToFailedResponse($"Có gói hàng không tồn tại id: {id}");
@@ -536,10 +536,12 @@ namespace unitofwork_core.Service.PackageService
                 package.Products.ToList().ForEach(pr =>
                 {
                     totalPriceCombo += pr.Price;
+                    packagePrice += pr.Price;
                 });
+                _logger.LogInformation("Total price package: " + packagePrice);
                 #region Create transactions
                 Transaction systemTrans = new Transaction();
-                systemTrans.Description = shipper!.Email + "đã nghận gói hàng với id: " + package.Id;
+                systemTrans.Description = $"Shipper({shipper!.Id})" + "đã nghận gói hàng với id: " + package.Id;
                 systemTrans.Status = TransactionStatus.ACCOMPLISHED;
                 systemTrans.TransactionType = TransactionType.PICKUP;
                 systemTrans.CoinExchange = totalPriceCombo;
@@ -551,7 +553,7 @@ namespace unitofwork_core.Service.PackageService
                 shipperTrans.Description = "Đã nhận đơn hàng id : " + package.Id;
                 shipperTrans.Status = TransactionStatus.ACCOMPLISHED;
                 shipperTrans.TransactionType = TransactionType.PICKUP;
-                shipperTrans.CoinExchange = packagePrice - package.PriceShip;
+                shipperTrans.CoinExchange = - packagePrice;
                 shipperTrans.BalanceWallet = shipperWallet!.Balance - packagePrice;
                 shipperTrans.PackageId = package.Id;
                 shipperTrans.WalletId = shipperWallet.Id;
@@ -559,7 +561,6 @@ namespace unitofwork_core.Service.PackageService
                 systemWallet.Balance = systemWallet.Balance + packagePrice;
                 shipperWallet.Balance = shipperWallet.Balance - packagePrice;
 
-                package.Status = PackageStatus.DELIVERY;
                 package.ShipperId = shipper.Id;
 
                 List<Transaction> transactions = new List<Transaction> {
@@ -570,10 +571,11 @@ namespace unitofwork_core.Service.PackageService
 
                 #region Create history
                 HistoryPackage history = new HistoryPackage();
-                history.FromStatus = PackageStatus.APPROVED;
+                history.FromStatus = package.Status;
                 history.ToStatus = PackageStatus.DELIVERY;
-                history.Description = $"Shipper({package.ShipperId}) đã nhận đơn hàng vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
+                history.Description = $"Shipper({package.ShipperId}) đang giao đơn hàng vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
                 history.PackageId = package.Id;
+                package.Status = PackageStatus.DELIVERY;
                 await _historyPackageRepo.InsertAsync(history);
                 #endregion
             };
@@ -609,7 +611,7 @@ namespace unitofwork_core.Service.PackageService
             HistoryPackage history = new HistoryPackage();
             history.FromStatus = package.Status;
             history.ToStatus = PackageStatus.DELIVERED;
-            history.Description = "Shipper giao hàng thành công vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
+            history.Description = $"Shipper({package.ShipperId}) giao hàng thành công vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
             history.PackageId = package.Id;
             await _historyPackageRepo.InsertAsync(history);
             package.Status = PackageStatus.DELIVERED;
@@ -666,21 +668,29 @@ namespace unitofwork_core.Service.PackageService
         public async Task<ApiResponse> ShopConfirmDeliverySuccess(Guid packageId)
         {
             ApiResponse response = new ApiResponse();
-            decimal profitPercent = decimal.Parse(_configRepo.GetValueConfig(ConfigConstant.PROFIT_PERCENTAGE));
+            decimal profitPercent = decimal.Parse(_configRepo.GetValueConfig(ConfigConstant.PROFIT_PERCENTAGE)) / 100;
 
-            #region Predicate
-            Expression<Func<Wallet, bool>> predicateSystemWallet = (wallet) => wallet.WalletType == WalletType.SYSTEM;
-            #endregion
+            
             #region Includable pakage
             Func<IQueryable<Package>, IIncludableQueryable<Package, object?>> includePackage = (source) => source.Include(p => p.Shop)
                         .ThenInclude(shop => shop != null ? shop.Wallets : null)
-                        .Include(p => p.Shipper).ThenInclude(ship => ship != null ? ship.Wallets : null);
+                        .Include(p => p.Shipper).ThenInclude(ship => ship != null ? ship.Wallets : null)
+                        .Include(p => p.Products);
             #endregion
             Package? package = await _packageRepo.GetByIdAsync(packageId, disableTracking: false, include: includePackage);
+
+            #region Predicate wallet
+            Expression<Func<Wallet, bool>> predicateSystemWallet = (wallet) => wallet.WalletType == WalletType.SYSTEM;
+            Expression<Func<Wallet, bool>> predicateWalletShipper = (wallet) => wallet.WalletType == WalletType.DEFAULT
+                            && package != null ? (wallet.ShipperId == package.ShipperId) : false;
+            Expression<Func<Wallet, bool>> predicateWalletShop = (wallet) => wallet.WalletType == WalletType.DEFAULT
+                            && package != null ? (wallet.ShopId == package.ShopId) : false;
+            #endregion
+
             Shipper? shipper = package?.Shipper;
-            Wallet? shipperWallet = shipper?.Wallets.SingleOrDefault(w => w.WalletType == WalletType.DEFAULT);
+            Wallet? shipperWallet = await _walletRepo.GetSingleOrDefaultAsync(predicate: predicateWalletShipper, disableTracking: false);
             Shop? shop = package?.Shop;
-            Wallet? shopWallet = shipper?.Wallets.SingleOrDefault(w => w.WalletType == WalletType.DEFAULT);
+            Wallet? shopWallet = await _walletRepo.GetSingleOrDefaultAsync(predicate: predicateWalletShop, disableTracking: false);
             Wallet? systemWallet = await _walletRepo.GetSingleOrDefaultAsync(predicate: predicateSystemWallet, disableTracking: false);
             #region Verify params
             if (package == null)
@@ -709,6 +719,7 @@ namespace unitofwork_core.Service.PackageService
             {
                 totalPrice += pr.Price;
             });
+            _logger.LogInformation($"Profit percent: {profitPercent} ,Total price : {totalPrice}");
 
             #region Create transactions
             Transaction systemTrans = new Transaction();
@@ -719,6 +730,7 @@ namespace unitofwork_core.Service.PackageService
             systemTrans.BalanceWallet = systemWallet.Balance - totalPrice + package.PriceShip * profitPercent;
             systemTrans.PackageId = package.Id;
             systemTrans.WalletId = systemWallet.Id;
+            _logger.LogInformation($"System transaction: {systemTrans.CoinExchange}, Balance: {systemTrans.BalanceWallet}");
 
             Transaction shipperTrans = new Transaction();
             shipperTrans.Description = "Giao thành công đơn hàng id : " + package.Id;
@@ -728,6 +740,7 @@ namespace unitofwork_core.Service.PackageService
             shipperTrans.BalanceWallet = shipperWallet.Balance + totalPrice + package.PriceShip * (1 - profitPercent);
             shipperTrans.PackageId = package.Id;
             shipperTrans.WalletId = shipperWallet.Id;
+            _logger.LogInformation($"Shipper transaction: {shipperTrans.CoinExchange}, Balance: {shipperTrans.BalanceWallet}");
 
             Transaction shopTrans = new Transaction();
             shopTrans.Description = "Giao thành công đơn hàng id : " + package.Id;
@@ -737,6 +750,7 @@ namespace unitofwork_core.Service.PackageService
             shopTrans.BalanceWallet = shopWallet.Balance - totalPrice - package.PriceShip;
             shopTrans.PackageId = package.Id;
             shopTrans.WalletId = shopWallet.Id;
+            _logger.LogInformation($"Shop transaction: {shopTrans.CoinExchange}, Balance: {shopTrans.BalanceWallet}");
 
             systemWallet.Balance = systemWallet.Balance - totalPrice + package.PriceShip * profitPercent;
             shipperWallet.Balance = shipperWallet.Balance + totalPrice + package.PriceShip * (1 - profitPercent);
@@ -758,8 +772,8 @@ namespace unitofwork_core.Service.PackageService
             package.Status = PackageStatus.SHOP_CONFIRM_DEIVERED;
             await _historyPackageRepo.InsertAsync(history);
             #endregion
-            await _unitOfWork.CompleteAsync();
-
+            int result = await _unitOfWork.CompleteAsync();
+            if (result > 0) response.ToSuccessResponse("Yêu cầu thành công");
             return response;
         }
 
@@ -855,7 +869,7 @@ namespace unitofwork_core.Service.PackageService
             HistoryPackage history = new HistoryPackage();
             history.FromStatus = package.Status;
             history.ToStatus = PackageStatus.REFUND_SUCCESS;
-            history.Description = $"Shop({package.Shop}) xác nhận shipper đã giao hàng thành công vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
+            history.Description = $"Shop({package.Shop}) xác nhận shipper đã trả hàng thành công vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
             history.PackageId = package.Id;
 
             await _historyPackageRepo.InsertAsync(history);

@@ -35,5 +35,24 @@ namespace unitofwork_core.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Register shop")]
+        public async Task<ActionResult<ApiResponse<ResponseShopModel?>>> GetId(Guid id)
+        {
+            try
+            {
+                ApiResponse<ResponseShopModel?> response = await _shopService.GetById(id);
+                if (response.Success == false) {
+                    return BadRequest(response);
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Register shop has exception : " + ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

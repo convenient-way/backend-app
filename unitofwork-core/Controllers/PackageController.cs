@@ -90,6 +90,11 @@ namespace unitofwork_core.Controllers
                 }
                 return Ok(response);
             }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError("Api mapbox has exception : " + ex.Message);
+                return StatusCode(500, "Api mapbox has exception : " + ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError("Get suggest combo has exception : " + ex.Message);

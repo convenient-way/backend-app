@@ -12,7 +12,7 @@ namespace unitofwork_core.Core.Repository
 
         public string GetValueConfig(string configName)
         {
-            ConfigApp? configApp = _dbSet.SingleOrDefault(con => con.Name.Equals(configName));
+            ConfigApp? configApp = _dbSet.FirstOrDefault(con => con.Name.Equals(configName));
             if (configApp != null) {
                 return configApp.Note;
             }

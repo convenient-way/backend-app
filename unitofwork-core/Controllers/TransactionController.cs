@@ -21,7 +21,7 @@ namespace unitofwork_core.Controllers
 
         [HttpGet]
         [SwaggerOperation(Summary = "Get list transaction (Format datetime : yyyy-MM-dd)")]
-        public async Task<IActionResult> GetList(Guid shipperId, Guid shopId, string? from, string? to, int pageIndex = 0, int pageSize = 20)
+        public async Task<ActionResult<ApiResponsePaginated<ResponseTransactionModel>>> GetList(Guid shipperId, Guid shopId, string? from, string? to, int pageIndex = 0, int pageSize = 20)
         {
             try
             {
@@ -32,8 +32,10 @@ namespace unitofwork_core.Controllers
                     toDate = DateTime.ParseExact(to, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 }
                 ApiResponsePaginated<ResponseTransactionModel> response = await _transactionService.GetTransactions(shipperId, shopId, fromDate, toDate, pageIndex, pageSize);
-             
-                return Ok();
+                if (response.Success == false) {
+                    return BadRequest(response);
+                }
+                return Ok(response);
             }
             catch (FormatException ex)
             {

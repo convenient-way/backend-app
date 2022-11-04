@@ -1,8 +1,11 @@
-﻿using unitofwork_core.Constant.Shop;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using unitofwork_core.Constant.Shop;
 using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
+using unitofwork_core.Model.ApiResponseModel;
 using unitofwork_core.Model.ShopModel;
 
 namespace unitofwork_core.Service.ShopService
@@ -17,6 +20,21 @@ namespace unitofwork_core.Service.ShopService
             _logger = logger;
             _unitOfWork = unitOfWork;
             _shopRepo = unitOfWork.Shops;
+        }
+
+        public async Task<ApiResponse<ResponseShopModel?>> GetById(Guid id)
+        {
+            ApiResponse<ResponseShopModel?> response = new ApiResponse<ResponseShopModel?>();
+            #region Includable
+            Func<IQueryable<Shop>, IIncludableQueryable<Shop, object>> include = (shop) => shop.Include(s => s.Wallets);
+            #endregion
+            Shop? shop = await _shopRepo.GetByIdAsync(id, include: include);
+            if (shop == null) {
+                response.ToFailedResponse("Shop không tồn tại");
+                return response;
+            }
+            response.ToSuccessResponse(shop!.ToResponseModel(), "Lấy thông tin thành công");
+            return response;
         }
 
         public async Task<ResponseShopModel> Register(RegisterShopModel model)

@@ -37,7 +37,9 @@ namespace unitofwork_core.Service.DatabaseService
         }
         public void RemoveData()
         {
+            _unitOfWork.ConfigApps.DeleteRange(_configRepo.GetAll());
             _unitOfWork.Products.DeleteRange(_productRepo.GetAll());
+            _unitOfWork.Packages.DeleteRange(_packageRepo.GetAll());
             _unitOfWork.Wallets.DeleteRange(_walletRepo.GetAll());
             _unitOfWork.Shops.DeleteRange(_shopRepo.GetAll());
             _unitOfWork.Shippers.DeleteRange(_shipperRepo.GetAll());

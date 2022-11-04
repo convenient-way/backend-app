@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using unitofwork_core.Model.ApiResponseModel;
 
 namespace unitofwork_core.Controllers
 {
@@ -7,5 +8,13 @@ namespace unitofwork_core.Controllers
     [ApiController]
     public class BaseApiController : ControllerBase
     {
+        protected IActionResult SendResponse(ApiResponse response)
+        {
+            if (response.Success == false)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
