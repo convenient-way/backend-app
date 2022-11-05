@@ -148,8 +148,8 @@ namespace unitofwork_core.Controllers
         {
             try
             {
-                ApiResponse response = await _packageService.ShipperPickupPackage(model.shipperId,
-                    model.packageId, model.walletType);
+                ApiResponse response = await _packageService.ShipperPickupPackages(model.shipperId,
+                    model.packageIds, model.walletType);
                 if (response.Success == false)
                 {
                     return BadRequest(response);

@@ -11,7 +11,7 @@ namespace unitofwork_core.Service.PackageService
         Task<ApiResponsePaginated<ResponsePackageModel>> GetFilter(Guid shipperId, Guid shopId, string? status, int pageIndex, int pageSize);
         Task<ApiResponse> ApprovedPackage(Guid id);
         Task<ApiResponse> RejectPackage(Guid id);
-        Task<ApiResponse> ShipperPickupPackage(Guid shipperId, Guid packageId, string walletType = WalletType.DEFAULT);
+        Task<ApiResponse> ShipperPickupPackages(Guid shipperId, List<Guid> packageIds, string walletType = WalletType.DEFAULT);
         Task<ApiResponse> ShopCancelPackage(Guid packageId);
         Task<ApiResponse> ShipperCancelPackage(Guid packageId);
         Task<ApiResponseListError> ShipperConfirmPackages(List<Guid> packageIds, Guid shipperId, string walletType = WalletType.DEFAULT);

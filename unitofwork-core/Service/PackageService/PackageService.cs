@@ -323,12 +323,13 @@ namespace unitofwork_core.Service.PackageService
             return response;
         }
 
-        public async Task<ApiResponse> ShipperPickupPackage(Guid shipperId, Guid packageId, string walletType = WalletType.DEFAULT)
+        public async Task<ApiResponse> ShipperPickupPackages(Guid shipperId, List<Guid> packageIds, string walletType = WalletType.DEFAULT)
         {
             ApiResponse response = new ApiResponse();
 
             #region Includable shipper, pakage
             Func<IQueryable<Shipper>, IIncludableQueryable<Shipper, object>> includeShipper = (source) => source.Include(sh => sh.Wallets);
+            Func<IQueryable<Package>, IIncludableQueryable<Package, object>> includePackage = (source) => source.Include(sh => sh.Products);
             #endregion
             #region Predicate
             Expression<Func<Wallet, bool>> predicateSystemWallet = (wallet) => wallet.WalletType == WalletType.SYSTEM;
@@ -336,42 +337,52 @@ namespace unitofwork_core.Service.PackageService
 
             Shipper? shipper = await _shipperRepo.GetByIdAsync(shipperId, include: includeShipper, disableTracking: false);
             Wallet? shipperWallet = shipper?.Wallets.SingleOrDefault(w => w.WalletType == walletType);
-            Package? package = await _packageRepo.GetByIdAsync(packageId, disableTracking: false);
+
+            List<Package> packages = new List<Package>();
+            for (int i = 0; i < packageIds.Count; i++)
+            {
+                Package? package = await _packageRepo.GetByIdAsync(packageIds[i], disableTracking: false, include: includePackage);
+                if (package == null) {
+                    response.ToFailedResponse("Có gói hàng không tồn tại");
+                    return response;
+                }
+                if (package.Status != PackageStatus.APPROVED) {
+                    response.ToFailedResponse("Có gói hàng không tồn tại không ở trạng thái chờ để duyệt");
+                    return response;
+                }
+                packages.Add(package);
+            }
 
             #region Verify params
-            if (package == null)
-            {
-                response.ToFailedResponse("Gói hàng không tồn tại");
-                return response;
-            }
-            if (package.Status != PackageStatus.APPROVED)
-            {
-                response.ToFailedResponse("Gói hàng không tồn tại không ở trạng thái chờ để duyệt");
-                return response;
-            }
             decimal totalPrice = 0;
-            package.Products.ToList().ForEach(pr =>
+            for (int i = 0; i < packages.Count; i++)
             {
-                totalPrice += pr.Price;
-            });
-
+                Package package = packages[i];
+                package.Products.ToList().ForEach(pr =>
+                {
+                    totalPrice += pr.Price;
+                });
+            }
             if (shipperWallet == null || shipperWallet.Balance < totalPrice)
             {
                 response.ToFailedResponse("Số dư ví không đủ để thực hiện nhận gói hàng");
                 return response;
             }
             #endregion
-            package.ShipperId = shipperId;
             #region Create history
-            HistoryPackage history = new HistoryPackage();
-            history.FromStatus = package.Status;
-            history.ToStatus = PackageStatus.SHIPPER_PICKUP;
-            history.Description = "Đơn hàng được nhận vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
-            history.PackageId = package.Id;
-            await _historyPackageRepo.InsertAsync(history);
+            for (int i = 0; i < packages.Count; i++)
+            {
+                Package package = packages[i];
+                package.ShipperId = shipperId;
+                HistoryPackage history = new HistoryPackage();
+                history.FromStatus = package.Status;
+                history.ToStatus = PackageStatus.SHIPPER_PICKUP;
+                history.Description = "Đơn hàng được nhận vào lúc: " + DateTime.UtcNow.ToString(DateTimeFormatConstant.DEFAULT);
+                history.PackageId = package.Id;
+                await _historyPackageRepo.InsertAsync(history);
+                package.Status = PackageStatus.SHIPPER_PICKUP;
+            }
             #endregion
-            package.Status = PackageStatus.SHIPPER_PICKUP;
-
             int result = await _unitOfWork.CompleteAsync();
 
             #region Response result
