@@ -47,7 +47,8 @@ namespace unitofwork_core.Entities
             model.StartLongitude = this.StartLongitude;
             model.StartLatitude = this.StartLatitude;
             model.DestinationAddress = this.DestinationAddress;
-            model.DestinationLongitude = this.DestinationLatitude;
+            model.DestinationLongitude = this.DestinationLongitude;
+            model.DestinationLatitude = this.DestinationLatitude;
             model.ReceiverName = this.ReceiverName;
             model.ReceiverPhone = this.ReceiverPhone;
             model.Distance = this.Distance;
