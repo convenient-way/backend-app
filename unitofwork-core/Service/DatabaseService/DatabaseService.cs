@@ -206,6 +206,9 @@ namespace unitofwork_core.Service.DatabaseService
                        .RuleFor(p => p.Description, faker => faker.Lorem.Sentence(1));
                 List<Product> products = FakerProduct.Generate(2);
                 packages[i].Products = products;
+
+                packages[i].StartLatitude = packages[i].Shop!.Latitude;
+                packages[i].StartLongitude = packages[i].Shop!.Longitude;
             }
 
             _logger.LogInformation("Insert orders");
