@@ -224,11 +224,11 @@ namespace unitofwork_core.Service.PackageService
             foreach (Guid shopId in shopIds)
             {
                 ResponseComboPackageModel combo = new ResponseComboPackageModel();
-                combo.ShopId = shopId;
-                combo.packages = packagesValid.Where(p => p.ShopId == shopId).ToList();
+                combo.Shop = (await _shopRepo.GetByIdAsync(shopId))?.ToResponseModel();
+                combo.Packages = packagesValid.Where(p => p.ShopId == shopId).ToList();
 
                 decimal comboPrice = 0;
-                foreach (ResponsePackageModel pac in combo.packages)
+                foreach (ResponsePackageModel pac in combo.Packages)
                 {
                     foreach (ResponseProductModel pr in pac.Products)
                     {
@@ -236,7 +236,7 @@ namespace unitofwork_core.Service.PackageService
                     }
                 }
                 combo.ComboPrice = comboPrice;
-                _logger.LogInformation($"Combo[Shop: {combo.ShopId},Price: {combo.ComboPrice},Package: {combo.packages.Count}]");
+                _logger.LogInformation($"Combo[Shop: {combo.Shop?.Id},Price: {combo.ComboPrice},Package: {combo.Packages.Count}]");
                 combos.Add(combo);
             }
             PaginatedList<ResponseComboPackageModel> responseList = await combos.ToPaginatedListAsync(pageIndex, pageSize);
