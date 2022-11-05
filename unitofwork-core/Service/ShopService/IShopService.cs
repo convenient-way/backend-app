@@ -7,5 +7,6 @@ namespace unitofwork_core.Service.ShopService
     {
         Task<ApiResponse<ResponseShopModel?>> GetById(Guid id);
         Task<ResponseShopModel> Register(RegisterShopModel model);
+        Task<ApiResponsePaginated<ResponseShopModel>> GetList(int pageIndex, int pageSize);
     }
 }

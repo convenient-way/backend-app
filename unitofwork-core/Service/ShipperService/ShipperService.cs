@@ -1,10 +1,13 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
 using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
+using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.CollectionModel;
 using unitofwork_core.Model.ShipperModel;
 
 namespace unitofwork_core.Service.ShipperService
@@ -71,6 +74,27 @@ namespace unitofwork_core.Service.ShipperService
             Shipper? shipper = await _shipperRepo.GetByIdAsync(id: shipperId, include: include);
             if(shipper != null) model = shipper.ToResponseModel();
             return model;
+        }
+
+        public async Task<ApiResponsePaginated<ResponseShipperModel>> GetShippers(int pageIndex, int pageSize) {
+            ApiResponsePaginated<ResponseShipperModel> response = new ApiResponsePaginated<ResponseShipperModel>();
+            #region Verify params
+            if (pageIndex < 0 || pageSize < 1)
+            {
+                response.ToFailedResponse("Thông tin phân trang không hợp lệ");
+                return response;
+            }
+            #endregion
+            #region Includable
+            Func<IQueryable<Shipper>, IIncludableQueryable<Shipper, object?>> include = (shipper) => shipper.Include(sh => sh.Wallets);
+            #endregion
+            #region Selector
+            Expression<Func<Shipper, ResponseShipperModel>> selector = (source) => source.ToResponseModel();
+            #endregion
+            PaginatedList<ResponseShipperModel> shippers = await _shipperRepo.GetPagedListAsync<ResponseShipperModel>(include: include, 
+                pageIndex: pageIndex, pageSize: pageSize, selector: selector, predicate: null);
+            response.ToSuccessResponse(shippers, "Lấy thông tin thành công");
+            return response;
         }
     }
 }

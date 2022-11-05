@@ -39,6 +39,25 @@ namespace unitofwork_core.Controllers
             }
         }
 
+        [HttpGet]
+        [SwaggerOperation(Summary = "Get shippers")]
+        public async Task<ActionResult<ApiResponse<ResponseShipperModel>>> GetShippers(int pageIndex = 0, int pageSize = 20)
+        {
+            try
+            {
+                ApiResponsePaginated<ResponseShipperModel> response = await _shipperService.GetShippers(pageIndex, pageSize);
+                if (response.Success == false) {
+                    return BadRequest(response);
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Register shipper has exception : " + ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("register")]
         [SwaggerOperation(Summary = "Register shipper")]
         public async Task<ActionResult<ApiResponse<ResponseShipperModel>>> Register(RegisterShipperModel model)

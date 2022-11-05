@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
 using unitofwork_core.Constant.Shop;
 using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
 using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.CollectionModel;
 using unitofwork_core.Model.ShopModel;
 
 namespace unitofwork_core.Service.ShopService
@@ -34,6 +36,28 @@ namespace unitofwork_core.Service.ShopService
                 return response;
             }
             response.ToSuccessResponse(shop!.ToResponseModel(), "Lấy thông tin thành công");
+            return response;
+        }
+
+        public async Task<ApiResponsePaginated<ResponseShopModel>> GetList(int pageIndex, int pageSize)
+        {
+            ApiResponsePaginated<ResponseShopModel> response = new();
+            #region Verify params
+            if (pageIndex < 0 || pageSize < 1)
+            {
+                response.ToFailedResponse("Thông tin phân trang không hợp lệ");
+                return response;
+            }
+            #endregion
+            #region Includable
+            Func<IQueryable<Shop>, IIncludableQueryable<Shop, object>> include = (shop) => shop.Include(s => s.Wallets);
+            #endregion
+            #region Selector
+            Expression<Func<Shop, ResponseShopModel>> selector = (source) => source.ToResponseModel();
+            #endregion
+            PaginatedList<ResponseShopModel> shops = await _shopRepo.GetPagedListAsync(predicate: null, include: include,
+                selector: selector, pageIndex: pageIndex, pageSize: pageSize);
+            response.ToSuccessResponse(shops, "Lấy thông tin thành công");
             return response;
         }
 
