@@ -117,7 +117,7 @@ namespace unitofwork_core.Service.DatabaseService
                     WalletType = WalletType.DEFAULT,
                     Status = WalletStatus.ACTIVE,
                     ShipperId = shipperIndex.Id,
-                    Balance = 1000000
+                    Balance = 10000000
                 };
                 Wallet promotionWallet = new Wallet
                 {
