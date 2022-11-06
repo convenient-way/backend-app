@@ -21,7 +21,7 @@ namespace unitofwork_core.Controllers
 
         [HttpGet]
         [SwaggerOperation(Summary = "Get list package")]
-        public async Task<ActionResult<ApiResponsePaginated<ResponsePackageModel>>> Create(Guid shipperId, Guid shopId, string? status, int pageIndex = 0, int pageSize = 20)
+        public async Task<ActionResult<ApiResponsePaginated<ResponsePackageModel>>> GetList(Guid? shipperId, Guid? shopId, string? status, int pageIndex = 0, int pageSize = 20)
         {
             try
             {

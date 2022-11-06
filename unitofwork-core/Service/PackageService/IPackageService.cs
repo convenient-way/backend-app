@@ -8,7 +8,7 @@ namespace unitofwork_core.Service.PackageService
     {
         Task<ApiResponse<ResponsePackageModel>> Create(CreatePackageModel model);
         Task<ApiResponse<ResponsePackageModel>> GetById(Guid id);
-        Task<ApiResponsePaginated<ResponsePackageModel>> GetFilter(Guid shipperId, Guid shopId, string? status, int pageIndex, int pageSize);
+        Task<ApiResponsePaginated<ResponsePackageModel>> GetFilter(Guid? shipperId, Guid? shopId, string? status, int pageIndex, int pageSize);
         Task<ApiResponse> ApprovedPackage(Guid id);
         Task<ApiResponse> RejectPackage(Guid id);
         Task<ApiResponse> ShipperPickupPackages(Guid shipperId, List<Guid> packageIds, string walletType = WalletType.DEFAULT);

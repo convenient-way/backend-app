@@ -111,7 +111,7 @@ namespace unitofwork_core.Service.PackageService
             return response;
         }
 
-        public async Task<ApiResponsePaginated<ResponsePackageModel>> GetFilter(Guid shipperId, Guid shopId, string? status, int pageIndex, int pageSize)
+        public async Task<ApiResponsePaginated<ResponsePackageModel>> GetFilter(Guid? shipperId, Guid? shopId, string? status, int pageIndex, int pageSize)
         {
             ApiResponsePaginated<ResponsePackageModel> response = new ApiResponsePaginated<ResponsePackageModel>();
             #region Verify params
@@ -128,12 +128,12 @@ namespace unitofwork_core.Service.PackageService
 
             #region Predicates
             List<Expression<Func<Package, bool>>> predicates = new List<Expression<Func<Package, bool>>>();
-            if (shipperId != Guid.Empty)
+            if (shipperId != Guid.Empty && shipperId != null)
             {
                 Expression<Func<Package, bool>> filterShipper = (p) => p.ShipperId == shipperId;
                 predicates.Add(filterShipper);
             }
-            if (shopId != Guid.Empty)
+            if (shopId != Guid.Empty && shipperId != null)
             {
                 Expression<Func<Package, bool>> filterShop = (p) => p.ShopId == shopId;
                 predicates.Add(filterShop);
