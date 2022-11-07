@@ -123,7 +123,9 @@ namespace unitofwork_core.Service.PackageService
             #endregion
 
             #region Includable
-            Func<IQueryable<Package>, IIncludableQueryable<Package, object>> include = (source) => source.Include(p => p.Products);
+            Func<IQueryable<Package>, IIncludableQueryable<Package, object?>> include = (source) => source.Include(p => p.Products)
+                .Include(p => p.Shipper)
+                .Include(p => p.Shop);
             #endregion
 
             #region Predicates
@@ -173,7 +175,9 @@ namespace unitofwork_core.Service.PackageService
         {
             ApiResponse<List<ResponsePackageModel>> response = new ApiResponse<List<ResponsePackageModel>>();
             #region Includable
-            Func<IQueryable<Package>, IIncludableQueryable<Package, object>> include = (source) => source.Include(p => p.Products);
+            Func<IQueryable<Package>, IIncludableQueryable<Package, object?>> include = (source) => source.Include(p => p.Products)
+            .Include(p => p.Shipper)
+                .Include(p => p.Shop); ;
             #endregion
             #region Order
             Func<IQueryable<Package>, IOrderedQueryable<Package>> orderBy = (source) => source.OrderByDescending(p => p.ModifiedAt);
