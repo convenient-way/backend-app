@@ -5,6 +5,9 @@ using unitofwork_core.Entities;
 using unitofwork_core.Helper;
 using unitofwork_core.Model.ApiResponseModel;
 using unitofwork_core.Model.AuthorizeModel;
+using Vonage;
+using Vonage.Request;
+using Vonage.Verify;
 
 namespace unitofwork_core.Service.AuthorizeService
 {
@@ -72,6 +75,47 @@ namespace unitofwork_core.Service.AuthorizeService
                 response.Message = "Sai tên tài khoản hoặc mật khẩu";
             }
 
+            return response;
+        }
+
+        public async Task<ApiResponse<string>> SentOtp(string phone)
+        {
+            ApiResponse<string> response = new ApiResponse<string>();
+            var credentials = Credentials.FromApiKeyAndSecret("bbe37b49", "9pVLaDGyKKkE4VFD");
+            var client = new VonageClient(credentials);
+            var request = new VerifyRequest()
+            {
+                Brand = "T3T",
+                Number = phone,
+            };
+            var responseVonage = await client.VerifyClient.VerifyRequestAsync(request);
+            Console.WriteLine($"Verify Request Complete\nStatus:{responseVonage.Status}\nRequest ID:{responseVonage.RequestId} {request}");
+            if (responseVonage.Status == "0")
+            {
+                response.ToSuccessResponse(responseVonage.RequestId, "Xác thực OTP với request id này");
+                return response;
+            }
+            else {
+                response.ToSuccessResponse(responseVonage.ErrorText, "Số điện thoại không hợp lệ");
+                return response;
+            }
+        }
+
+        public async Task<ApiResponse> VerifyOtp(string requestId, string otpCode)
+        {
+            ApiResponse response = new ApiResponse();
+            var credentials = Credentials.FromApiKeyAndSecret("bbe37b49", "9pVLaDGyKKkE4VFD");
+            var client = new VonageClient(credentials);
+            var request = new VerifyCheckRequest() { Code = otpCode, RequestId = requestId };
+            var responseVonage = await client.VerifyClient.VerifyCheckAsync(request);
+            int statusCode = int.Parse(responseVonage.Status);
+            if (statusCode == 0) {
+                response.ToSuccessResponse("Xác thực thành công");
+            }
+            else
+            {
+                response.ToFailedResponse("Xác thực thất bại");
+            }
             return response;
         }
     }

@@ -62,6 +62,8 @@ namespace unitofwork_core.Entities
             model.ModifiedAt = this.ModifiedAt;
             model.ShopId = this.ShopId;
             model.ShipperId = this.ShipperId;
+            model.Shipper = this.Shipper != null ? this.Shipper.ToResponseModel() : null;
+            model.Shop = this.Shop != null ? this.Shop.ToResponseModel() : null;
 
             int countProduct = this.Products.Count;
             for (int i = 0; i < countProduct; i++)

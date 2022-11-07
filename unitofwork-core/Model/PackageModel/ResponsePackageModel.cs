@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using unitofwork_core.Model.ProductModel;
+using unitofwork_core.Model.ShipperModel;
+using unitofwork_core.Model.ShopModel;
 
 namespace unitofwork_core.Model.PackageModel
 {
@@ -25,7 +27,9 @@ namespace unitofwork_core.Model.PackageModel
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public Guid ShopId { get; set; }
+        public ResponseShopModel? Shop { get; set; }
         public Guid? ShipperId { get; set; }
+        public ResponseShipperModel? Shipper { get; set; }
         public IList<ResponseProductModel> Products { get; set; } = new List<ResponseProductModel>();
     }
 }
