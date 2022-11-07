@@ -1,9 +1,9 @@
 ﻿using Bogus;
+using unitofwork_core.Constant.ActorConstant;
 using unitofwork_core.Constant.ConfigConstant;
 using unitofwork_core.Constant.OrderRouting;
 using unitofwork_core.Constant.Package;
 using unitofwork_core.Constant.Role;
-using unitofwork_core.Constant.User;
 using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
@@ -67,10 +67,10 @@ namespace unitofwork_core.Service.DatabaseService
             Faker<Admin> FakerAdmin = new Faker<Admin>()
                  .RuleFor(u => u.UserName, faker => faker.Person.UserName)
                 .RuleFor(u => u.Email, faker => faker.Person.Email)
-                .RuleFor(u => u.Status, faker => faker.PickRandom(UserStatus.GetAllStatus()))
+                .RuleFor(u => u.Status, faker => "ACTIVE")
                 .RuleFor(u => u.DisplayName, faker => faker.Person.FullName)
                 .RuleFor(u => u.PhotoUrl, faker => faker.PickRandom(avatarsLink))
-                .RuleFor(u => u.Gender, faker => faker.PickRandom(UserGender.GetGenders()))
+                .RuleFor(u => u.Gender, faker => faker.PickRandom(ActorGender.GetAll()))
                 .RuleFor(u => u.Address, (faker, shipper) => faker.Person.Address.Street)
                 .RuleFor(u => u.Password, faker => faker.Person.FirstName.ToLower())
                 .RuleFor(u => u.PhoneNumber, faker => faker.Person.Phone);
@@ -97,10 +97,10 @@ namespace unitofwork_core.Service.DatabaseService
             Faker<Shipper> FakerShipper = new Faker<Shipper>()
                 .RuleFor(u => u.UserName, faker => faker.Person.UserName)
                 .RuleFor(u => u.Email, faker => faker.Person.Email)
-                .RuleFor(u => u.Status, faker => faker.PickRandom(UserStatus.GetAllStatus()))
+                .RuleFor(u => u.Status, faker => ActorStatus.ACTIVE)
                 .RuleFor(u => u.DisplayName, faker => faker.Person.FullName)
                 .RuleFor(u => u.PhotoUrl, faker => faker.PickRandom(avatarsLink))
-                .RuleFor(u => u.Gender, faker => faker.PickRandom(UserGender.GetGenders()))
+                .RuleFor(u => u.Gender, faker => ActorGender.OTHER)
                 .RuleFor(u => u.Address, (faker, shipper) => faker.Person.Address.Street)
                 .RuleFor(u => u.Password, faker => faker.Person.FirstName.ToLower())
           /*      .RuleFor(u => u.HomeLongitude, faker => faker.Random.Double(min: minLongitude, max: maxLongitude))
@@ -146,7 +146,7 @@ namespace unitofwork_core.Service.DatabaseService
             Faker<Shop> FakerShop = new Faker<Shop>()
                .RuleFor(u => u.UserName, faker => faker.Person.UserName)
                .RuleFor(u => u.Email, faker => faker.Person.Email)
-               .RuleFor(u => u.Status, faker => faker.PickRandom(UserStatus.GetAllStatus()))
+               .RuleFor(u => u.Status, faker => faker.PickRandom(ActorStatus.ACTIVE))
                .RuleFor(u => u.DisplayName, faker => faker.Person.FullName)
                .RuleFor(u => u.PhotoUrl, faker => faker.PickRandom(avatarsLink))
                 .RuleFor(u => u.Password, faker => faker.Person.FirstName.ToLower())

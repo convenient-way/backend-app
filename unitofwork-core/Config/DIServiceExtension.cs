@@ -8,6 +8,7 @@ using unitofwork_core.Service.Goong;
 using unitofwork_core.Service.HistoryPackageService;
 using unitofwork_core.Service.MapboxService;
 using unitofwork_core.Service.PackageService;
+using unitofwork_core.Service.ShipperRouteService;
 using unitofwork_core.Service.ShipperService;
 using unitofwork_core.Service.ShopService;
 using unitofwork_core.Service.TransactionService;
@@ -29,6 +30,7 @@ namespace unitofwork_core.Config
             services.AddTransient<IGoongService, GoongService>();
             services.AddTransient<ITransactionService, TransactionService>();
             services.AddTransient<IDatabaseService, DatabaseService>();
+            services.AddTransient<IShipperRouteService, ShipperRouteService>();
         }
     }
 }

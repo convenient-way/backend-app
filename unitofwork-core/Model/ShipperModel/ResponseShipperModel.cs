@@ -1,4 +1,4 @@
-﻿using unitofwork_core.Model.ShipperRoute;
+﻿using unitofwork_core.Model.ShipperRouteModel;
 using unitofwork_core.Model.WalletModel;
 
 namespace unitofwork_core.Model.ShipperModel
@@ -15,7 +15,6 @@ namespace unitofwork_core.Model.ShipperModel
         public string Address { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        
         public List<ResponseShipperRouteModel>? Routes { get; set; }
         public List<ResponseWalletModel>? Wallets { get; set; }
     }

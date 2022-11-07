@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using unitofwork_core.Constant.ShipperConstant;
 using unitofwork_core.Constant.Wallet;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
@@ -35,11 +36,11 @@ namespace unitofwork_core.Service.ShipperService
             shipper.DisplayName = model.DisplayName;
             shipper.PhoneNumber = model.PhoneNumber;
             shipper.PhotoUrl = model.PhotoUrl;
-            shipper.Status = model.Status;
+            shipper.Status = ShipperStatus.NO_ROUTE;
             shipper.Gender = model.Gender;
-            shipper.Address = model.HomeAddress;
+            // shipper.Address = model.HomeAddress;
            
-            ShipperRoute route = new ShipperRoute();
+           /* ShipperRoute route = new ShipperRoute();
             route.FromLongitude = model.HomeLongitude;
             route.FromLatitude = model.HomeLatitude;
             route.FromAddress = model.HomeAddress;
@@ -47,13 +48,13 @@ namespace unitofwork_core.Service.ShipperService
             route.ToLatitude = model.DestinationLatitude;
             route.ToAddress = model.DestinationAddress;
             route.IsActive = true;
-            shipper.Routes.Add(route);
+            shipper.Routes.Add(route);*/
 
             Wallet defaultWallet = new Wallet {
                 WalletType = WalletType.DEFAULT,
                 Status = WalletStatus.ACTIVE,
                 ShipperId = shipper.Id,
-                Balance = 1000000
+                Balance = 10000000
             };
             Wallet promotionWallet = new Wallet
             {

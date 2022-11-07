@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using unitofwork_core.Model.ShipperModel;
-using unitofwork_core.Model.ShipperRoute;
+using unitofwork_core.Model.ShipperRouteModel;
 using unitofwork_core.Model.WalletModel;
 
 namespace unitofwork_core.Entities

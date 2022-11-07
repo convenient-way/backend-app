@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
@@ -38,7 +39,8 @@ namespace unitofwork_core.Service.AuthorizeService
             string roleName = "";
             if (isShipper) {
                 Expression<Func<Shipper,bool>> predicate = (ship) => ship.UserName.Equals(model.UserName) && ship.Password.Equals(model.Password);
-                Shipper? shipper = await _shipperRepo.GetSingleOrDefaultAsync(predicate);
+                Shipper? shipper = await _shipperRepo.GetSingleOrDefaultAsync(predicate , include: source => source.Include(u => u.Wallets)
+                                .Include(u => u.Routes));
                 if (shipper != null) {
                     response.Data.Shipper = shipper.ToResponseModel();
                     roleName = "SHIPPER";

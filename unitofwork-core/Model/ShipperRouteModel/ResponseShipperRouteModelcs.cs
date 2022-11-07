@@ -1,4 +1,4 @@
-﻿namespace unitofwork_core.Model.ShipperRoute
+﻿namespace unitofwork_core.Model.ShipperRouteModel
 {
     public class ResponseShipperRouteModel
     {

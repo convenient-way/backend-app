@@ -1,4 +1,4 @@
-﻿using unitofwork_core.Model.ShipperRoute;
+﻿using unitofwork_core.Model.ShipperRouteModel;
 
 namespace unitofwork_core.Entities
 {

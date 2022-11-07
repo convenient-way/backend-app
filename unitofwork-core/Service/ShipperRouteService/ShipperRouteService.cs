@@ -1,8 +1,9 @@
-﻿using unitofwork_core.Core.IConfiguraton;
+﻿using unitofwork_core.Constant.ShipperConstant;
+using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
 using unitofwork_core.Model.ApiResponseModel;
-using unitofwork_core.Model.ShipperRoute;
+using unitofwork_core.Model.ShipperRouteModel;
 
 namespace unitofwork_core.Service.ShipperRouteService
 {
@@ -32,6 +33,32 @@ namespace unitofwork_core.Service.ShipperRouteService
                 response.ToFailedResponse("Shipper không tồn tại");
             }
             return await Task.FromResult(response);
+
+        }
+
+        public async Task<ApiResponse<ResponseShipperRouteModel>> RegisterRoute(RegisterShipperRouteModel model)
+        {
+            ApiResponse<ResponseShipperRouteModel> response = new ApiResponse<ResponseShipperRouteModel>();
+            ShipperRoute route = model.ConvertToEntity();
+            Shipper? shipper = await _shipperRepo.GetByIdAsync(model.ShipperId, disableTracking: false);
+            if (shipper != null && shipper.Status == ShipperStatus.NO_ROUTE)
+            {
+                await _shipperRouteRepo.InsertAsync(route);
+                shipper.Status = ShipperStatus.ACTIVE;
+                int result = await _unitOfWork.CompleteAsync();
+                if (result > 0)
+                {
+                    response.ToSuccessResponse(route.ToResponseModel(), "Đăng kí tuyến đường mặc định thành công");
+                }
+                else
+                {
+                    response.ToFailedResponse("Đăng kí tuyến đường mặc định thất bại");
+                }
+            }
+            else {
+                response.ToFailedResponse("Shipper không tồn tại hoặc không ở trạng thái \"NO_ROUTE\"");
+            }
+            return response;
 
         }
 
