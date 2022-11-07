@@ -21,7 +21,7 @@ namespace unitofwork_core.Controllers
 
         [HttpGet]
         [SwaggerOperation(Summary = "Get list package")]
-        public async Task<ActionResult<ApiResponsePaginated<ResponsePackageModel>>> GetList(Guid shipperId, Guid shopId, string? status, int pageIndex = 0, int pageSize = 20)
+        public async Task<ActionResult<ApiResponsePaginated<ResponsePackageModel>>> GetList(Guid?shipperId, Guid? shopId, string? status, int? pageIndex, int? pageSize)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace unitofwork_core.Controllers
             }
         }
 
-        [HttpGet("all")]
+        /*[HttpGet("all")]
         [SwaggerOperation(Summary = "Get all package")]
         public async Task<ActionResult<ApiResponse<List<ResponsePackageModel>>>> GetAll(Guid shipperId, Guid shopId, string? status)
         {
@@ -58,7 +58,7 @@ namespace unitofwork_core.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
+*/
         [HttpGet("{id}")]
         public async Task<ActionResult<ActionResult<ApiResponse<ResponsePackageModel>>>> GetId(Guid id)
         {

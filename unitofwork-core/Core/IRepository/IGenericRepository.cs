@@ -25,6 +25,7 @@ namespace unitofwork_core.Core.IRepository
         Task<TEntity> InsertAsync(TEntity entity);
         Task InsertAsync(IEnumerable<TEntity> entities);
         Task InsertAsync(IList<TEntity> entities);
+        int Count();
         Task<bool> DeleteAsync(Guid id);
         Task<TEntity?> GetSingleOrDefaultAsync(
             Expression<Func<TEntity, bool>> predicate,

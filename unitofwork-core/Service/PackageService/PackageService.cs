@@ -113,14 +113,16 @@ namespace unitofwork_core.Service.PackageService
             return response;
         }
 
-        public async Task<ApiResponsePaginated<ResponsePackageModel>> GetFilter(Guid shipperId, Guid shopId, string? status, int pageIndex, int pageSize)
+        public async Task<ApiResponsePaginated<ResponsePackageModel>> GetFilter(Guid? shipperId, Guid? shopId, string? status, int? pageIndex, int? pageSize)
         {
             ApiResponsePaginated<ResponsePackageModel> response = new ApiResponsePaginated<ResponsePackageModel>();
             #region Verify params
-            if (pageIndex < 0 || pageSize < 1)
-            {
-                response.ToFailedResponse("Thông tin phân trang không hợp lệ");
-                return response;
+            if (pageIndex != null && pageSize != null) {
+                if (pageIndex < 0 || pageSize < 1)
+                {
+                    response.ToFailedResponse("Thông tin phân trang không hợp lệ");
+                    return response;
+                }
             }
             #endregion
 
@@ -132,12 +134,12 @@ namespace unitofwork_core.Service.PackageService
 
             #region Predicates
             List<Expression<Func<Package, bool>>> predicates = new List<Expression<Func<Package, bool>>>();
-            if (shipperId != Guid.Empty)
+            if (shipperId != Guid.Empty && shipperId != null)
             {
                 Expression<Func<Package, bool>> filterShipper = (p) => p.ShipperId == shipperId;
                 predicates.Add(filterShipper);
             }
-            if (shopId != Guid.Empty)
+            if (shopId != Guid.Empty && shopId != null)
             {
                 Expression<Func<Package, bool>> filterShop = (p) => p.ShopId == shopId;
                 predicates.Add(filterShop);
@@ -154,9 +156,19 @@ namespace unitofwork_core.Service.PackageService
             #endregion
 
             Expression<Func<Package, ResponsePackageModel>> selector = (package) => package.ToResponseModel();
-            PaginatedList<ResponsePackageModel> items = await _packageRepo.GetPagedListAsync(
+            PaginatedList<ResponsePackageModel> items;
+            if (pageIndex != null && pageSize != null)
+            {
+                items = await _packageRepo.GetPagedListAsync(
                 selector: selector, include: include, predicates: predicates,
-                orderBy: orderBy, pageIndex: pageIndex, pageSize: pageSize);
+                orderBy: orderBy, pageIndex: pageIndex ?? 0, pageSize: pageSize ?? 0);
+            }
+            else {
+                int countAll = _packageRepo.Count();
+                items = await _packageRepo.GetPagedListAsync(
+                selector: selector, include: include, predicates: predicates,
+                orderBy: orderBy, pageIndex: 0, pageSize: countAll);
+            }
             _logger.LogInformation("Total count: " + items.TotalCount);
             #region Response result
             response.SetData(items);

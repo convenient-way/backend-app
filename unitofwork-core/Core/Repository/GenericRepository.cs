@@ -463,6 +463,11 @@ namespace unitofwork_core.Core.Repository
             result = await query.FirstOrDefaultAsync();
             return result;
         }
+
+        public int Count()
+        {
+            return _dbSet.Count();
+        }
     }
 }
 
