@@ -18,6 +18,7 @@ namespace unitofwork_core.Data
         public IHistoryPackageRepostiory HistoryPackages { get; private set; }
         public IProductRepository Products { get; private set; }
         public ITransactionRepository Transactions { get; private set; }
+        public IShipperRouteRepository ShipperRoutes { get; private set; }
         public UnitOfWork(AppDbContext context, ILogger<UnitOfWork> logger)
         {
             _context = context;
@@ -31,6 +32,7 @@ namespace unitofwork_core.Data
             Packages = new PackageRepository(_context, _logger);
             HistoryPackages = new HistoryPackageRepostiory(_context, _logger);
             ConfigApps = new ConfigRepository(_context, _logger);
+            ShipperRoutes = new ShipperRouteRepository(_context, logger);
         }
 
         public async Task<int> CompleteAsync()

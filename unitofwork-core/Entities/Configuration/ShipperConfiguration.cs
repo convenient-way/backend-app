@@ -17,6 +17,8 @@ namespace unitofwork_core.Entities.Configuration
                 .WithOne(or => or.Shipper).HasForeignKey(or => or.ShipperId);
             builder.HasMany(sh => sh.Wallets)
                  .WithOne(wl => wl.Shipper).HasForeignKey(wl => wl.ShipperId);
+            builder.HasMany(sh => sh.Routes)
+                .WithOne(r => r.Shipper).HasForeignKey(r => r.ShipperId);
         }
     }
 }

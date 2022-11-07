@@ -103,10 +103,10 @@ namespace unitofwork_core.Service.DatabaseService
                 .RuleFor(u => u.Gender, faker => faker.PickRandom(UserGender.GetGenders()))
                 .RuleFor(u => u.Address, (faker, shipper) => faker.Person.Address.Street)
                 .RuleFor(u => u.Password, faker => faker.Person.FirstName.ToLower())
-                .RuleFor(u => u.HomeLongitude, faker => faker.Random.Double(min: minLongitude, max: maxLongitude))
+          /*      .RuleFor(u => u.HomeLongitude, faker => faker.Random.Double(min: minLongitude, max: maxLongitude))
                 .RuleFor(u => u.HomeLatitude, faker => faker.Random.Double(min: minLatitude, max: maxLatitude))
                 .RuleFor(u => u.DestinationLongitude, faker => faker.Random.Double(min: minLongitude, max: maxLongitude))
-                .RuleFor(u => u.DestinationLatitude, faker => faker.Random.Double(min: minLatitude, max: maxLatitude))
+                .RuleFor(u => u.DestinationLatitude, faker => faker.Random.Double(min: minLatitude, max: maxLatitude))*/
                 .RuleFor(u => u.PhoneNumber, faker => faker.Person.Phone);
             List<Shipper> shippers = FakerShipper.Generate(10);
             for (int i = 0; i < shippers.Count; i++)

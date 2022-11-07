@@ -37,11 +37,17 @@ namespace unitofwork_core.Service.ShipperService
             shipper.PhotoUrl = model.PhotoUrl;
             shipper.Status = model.Status;
             shipper.Gender = model.Gender;
-            shipper.Address = model.Address;
-            shipper.HomeLongitude = model.HomeLongitude;
-            shipper.HomeLatitude = model.HomeLatitude;
-            shipper.DestinationLongitude = model.DestinationLongitude;
-            shipper.DestinationLatitude = model.DestinationLatitude;
+            shipper.Address = model.HomeAddress;
+           
+            ShipperRoute route = new ShipperRoute();
+            route.FromLongitude = model.HomeLongitude;
+            route.FromLatitude = model.HomeLatitude;
+            route.FromAddress = model.HomeAddress;
+            route.ToLongitude = model.DestinationLongitude;
+            route.ToLatitude = model.DestinationLatitude;
+            route.ToAddress = model.DestinationAddress;
+            route.IsActive = true;
+            shipper.Routes.Add(route);
 
             Wallet defaultWallet = new Wallet {
                 WalletType = WalletType.DEFAULT,

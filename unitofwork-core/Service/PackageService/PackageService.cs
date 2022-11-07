@@ -33,6 +33,7 @@ namespace unitofwork_core.Service.PackageService
         private readonly IHistoryPackageRepostiory _historyPackageRepo;
         private readonly ITransactionRepository _transactionRepo;
         private readonly IConfigRepostiory _configRepo;
+        private readonly IShipperRouteRepository _shipperRouteRepo;
         private readonly IMapboxService _mapboxService;
         public PackageService(ILogger<PackageService> logger, IUnitOfWork unitOfWork, IMapboxService mapboxService)
         {
@@ -48,6 +49,7 @@ namespace unitofwork_core.Service.PackageService
             _walletRepo = unitOfWork.Wallets;
             _transactionRepo = unitOfWork.Transactions;
             _configRepo = unitOfWork.ConfigApps;
+            _shipperRouteRepo = unitOfWork.ShipperRoutes;
         }
 
         public async Task<ApiResponse<ResponsePackageModel>> Create(CreatePackageModel model)
@@ -212,9 +214,16 @@ namespace unitofwork_core.Service.PackageService
             ApiResponsePaginated<ResponseComboPackageModel> response = new ApiResponsePaginated<ResponseComboPackageModel>();
             #region Verify params
             Shipper? _shipper = await _shipperRepo.GetByIdAsync(shipperId);
+            ShipperRoute? _route = await _shipperRouteRepo.GetSingleOrDefaultAsync(
+                    predicate: (rou) => rou.ShipperId == shipperId && rou.IsActive == true);
             if (_shipper == null)
             {
                 response.ToFailedResponse("Shipperkhông tồn tại");
+                return response;
+            }
+            if (_route == null)
+            {
+                response.ToFailedResponse("Chưa chọn tuyến đường");
                 return response;
             }
             if (pageIndex < 0 || pageSize < 1)
@@ -223,9 +232,9 @@ namespace unitofwork_core.Service.PackageService
                 return response;
             }
             #endregion
-
-            GeoCoordinate homeCoordinate = new GeoCoordinate(_shipper.HomeLatitude, _shipper.HomeLongitude);
-            GeoCoordinate destinationCoordinate = new GeoCoordinate(_shipper.DestinationLatitude, _shipper.DestinationLongitude);
+            
+            GeoCoordinate homeCoordinate = new GeoCoordinate(_route.FromLatitude, _route.FromLongitude);
+            GeoCoordinate destinationCoordinate = new GeoCoordinate(_route.ToLatitude, _route.ToLongitude);
 
             PolyLineModel polyLineShipper = await _mapboxService.GetPolyLineModel(homeCoordinate, destinationCoordinate);
 

@@ -15,6 +15,7 @@ namespace unitofwork_core.Core.IConfiguraton
         IWalletRepository Wallets {get;}
         IProductRepository Products {get;}
         ITransactionRepository Transactions {get;}
+        IShipperRouteRepository ShipperRoutes { get; }
 
         Task<int> CompleteAsync();
         int Complete();

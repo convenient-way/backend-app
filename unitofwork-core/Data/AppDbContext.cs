@@ -20,6 +20,7 @@ namespace unitofwork_core.Data
         public virtual DbSet<ConfigApp> ConfigApps => Set<ConfigApp>();
         public virtual DbSet<Transaction> Transactions => Set<Transaction>();
         public virtual DbSet<Wallet> Wallets => Set<Wallet>();
+        public virtual DbSet<ShipperRoute> Routes => Set<ShipperRoute>();
         #endregion
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
