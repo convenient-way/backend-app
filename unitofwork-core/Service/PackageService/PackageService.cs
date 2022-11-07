@@ -169,6 +169,40 @@ namespace unitofwork_core.Service.PackageService
             return response;
         }
 
+        public async Task<ApiResponse<List<ResponsePackageModel>>> GetAll(Guid shipperId, Guid shopId, string? status)
+        {
+            ApiResponse<List<ResponsePackageModel>> response = new ApiResponse<List<ResponsePackageModel>>();
+            #region Includable
+            Func<IQueryable<Package>, IIncludableQueryable<Package, object>> include = (source) => source.Include(p => p.Products);
+            #endregion
+            #region Order
+            Func<IQueryable<Package>, IOrderedQueryable<Package>> orderBy = (source) => source.OrderByDescending(p => p.ModifiedAt);
+            #endregion
+            #region Predicates
+            List<Expression<Func<Package, bool>>> predicates = new List<Expression<Func<Package, bool>>>();
+            if (shipperId != Guid.Empty)
+            {
+                Expression<Func<Package, bool>> filterShipper = (p) => p.ShipperId == shipperId;
+                predicates.Add(filterShipper);
+            }
+            if (shopId != Guid.Empty)
+            {
+                Expression<Func<Package, bool>> filterShop = (p) => p.ShopId == shopId;
+                predicates.Add(filterShop);
+            }
+            if (status != null)
+            {
+                Expression<Func<Package, bool>> filterStatus = (p) => p.Status == status.ToUpper();
+                predicates.Add(filterStatus);
+            }
+            #endregion
+            Expression<Func<Package, ResponsePackageModel>> selector = (package) => package.ToResponseModel();
+            List<ResponsePackageModel> packages = (await _packageRepo.GetAllAsync(predicates: predicates,selector: selector, orderBy: orderBy, include: include)).ToList();
+            response.ToSuccessResponse(packages, "Lấy thông tin thành công");
+            return response;
+        }
+
+
         public async Task<ApiResponsePaginated<ResponseComboPackageModel>> SuggestCombo(Guid shipperId, int pageIndex, int pageSize)
         {
             ApiResponsePaginated<ResponseComboPackageModel> response = new ApiResponsePaginated<ResponseComboPackageModel>();
@@ -922,5 +956,6 @@ namespace unitofwork_core.Service.PackageService
             return response;
         }
 
+       
     }
 }

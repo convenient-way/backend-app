@@ -96,7 +96,7 @@ namespace unitofwork_core.Core.IRepository
             bool ignoreQueryFilter = false);
 
         Task<IList<TResult>> GetAllAsync<TResult>(Expression<Func<TEntity, TResult>> selector,
-            Expression<Func<TEntity, bool>>? predicate = null,
+            List<Expression<Func<TEntity, bool>>>? predicates = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>>? include = null,
             bool disableTracking = true,

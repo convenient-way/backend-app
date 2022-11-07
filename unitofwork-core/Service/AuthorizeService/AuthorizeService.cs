@@ -29,29 +29,42 @@ namespace unitofwork_core.Service.AuthorizeService
 
         public async Task<ApiResponse<ResponseLoginModel>> Login(LoginModel model,bool isShop,bool isShipper,bool isAdmin)
         {
+            ApiResponse<ResponseLoginModel> response = new ApiResponse<ResponseLoginModel>();
+            response.Data = new ResponseLoginModel();
             Actor? userExist = null;
+            string roleName = "";
             if (isShipper) {
                 Expression<Func<Shipper,bool>> predicate = (ship) => ship.UserName.Equals(model.UserName) && ship.Password.Equals(model.Password);
                 Shipper? shipper = await _shipperRepo.GetSingleOrDefaultAsync(predicate);
+                if (shipper != null) {
+                    response.Data.Shipper = shipper.ToResponseModel();
+                    roleName = "SHIPPER";
+                }
                 userExist = shipper;
             }
             if (isShop) {
                 Expression<Func<Shop, bool>> predicate = (shop) => shop.UserName.Equals(model.UserName) && shop.Password.Equals(model.Password);
                 Shop? shop = await _shopRepo.GetSingleOrDefaultAsync(predicate);
+                if (shop != null)
+                {
+                    response.Data.Shop = shop.ToResponseModel();
+                    roleName = "SHOP";
+                }
                 userExist = shop;
             }
             if (isAdmin)
             {
                 Expression<Func<Admin, bool>> predicate = (admin) => admin.UserName.Equals(model.UserName) && admin.Password.Equals(model.Password);
                 Admin? admin = await _adminRepo.GetSingleOrDefaultAsync(predicate);
+                if (admin != null) { 
+                    response.Data.Admin = admin.ToResponseModel();
+                    roleName = "ADMIN";
+                }
                 userExist = admin;
             }
-            ApiResponse<ResponseLoginModel> response = new ApiResponse<ResponseLoginModel> ();
-            ResponseLoginModel responseLoginModel = new ResponseLoginModel();
             if (userExist != null) {
-                responseLoginModel.Token = _jwtHelper.generateJwtToken(userExist);
+                response.Data.Token = _jwtHelper.generateJwtToken(userExist, roleName);
                 response.Message = "Đăng nhập thành công";
-                response.Data = responseLoginModel;
             }
             else
             {

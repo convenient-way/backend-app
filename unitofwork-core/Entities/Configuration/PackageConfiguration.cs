@@ -10,7 +10,9 @@ namespace unitofwork_core.Entities.Configuration
             builder.ToTable("Package");
 
             builder.Property(p => p.PriceShip).HasColumnType("decimal(10,0)");
-
+            builder.Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE()").ValueGeneratedOnAdd();
+            builder.Property(u => u.ModifiedAt)
+                .HasDefaultValueSql("GETDATE()").ValueGeneratedOnAddOrUpdate();
             builder.HasMany(p => p.HistoryPackages)
                 .WithOne(hp => hp.Package).HasForeignKey(hp => hp.PackageId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(p => p.Transactions)

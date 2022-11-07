@@ -189,7 +189,7 @@ namespace unitofwork_core.Core.Repository
         }
 
         public virtual async Task<IList<TResult>> GetAllAsync<TResult>(
-            Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? predicate = null,
+            Expression<Func<TEntity, TResult>> selector, List<Expression<Func<TEntity, bool>>>? predicates = null,
           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
           Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>>? include = null,
           bool disableTracking = true, bool ignoreQueryFilters = false)
@@ -203,9 +203,13 @@ namespace unitofwork_core.Core.Repository
             {
                 query = include(query);
             }
-            if (predicate != null)
+            if (predicates != null && predicates.Count > 0)
             {
-                query = query.Where(predicate);
+                int count = predicates.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    query = query.Where(predicates[i]);
+                }
             }
             if (ignoreQueryFilters)
             {

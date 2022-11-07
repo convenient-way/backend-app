@@ -36,6 +36,8 @@ namespace unitofwork_core.Model.PackageModel
             entity.Distance = this.Distance;
             entity.Volume = this.Volume;
             entity.Weight = this.Weight;
+            entity.ReceiverName = this.ReceiverName;
+            entity.ReceiverPhone = this.ReceiverPhone;
             entity.Status = PackageStatus.WAITING;
             entity.PriceShip = this.PriceShip;
             entity.PhotoUrl = this.PhotoUrl;

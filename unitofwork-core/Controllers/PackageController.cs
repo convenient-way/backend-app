@@ -39,6 +39,26 @@ namespace unitofwork_core.Controllers
             }
         }
 
+        [HttpGet("all")]
+        [SwaggerOperation(Summary = "Get all package")]
+        public async Task<ActionResult<ApiResponse<List<ResponsePackageModel>>>> GetAll(Guid shipperId, Guid shopId, string? status)
+        {
+            try
+            {
+                ApiResponse<List<ResponsePackageModel>> response = await _packageService.GetAll(shipperId, shopId, status);
+                if (response.Success == false)
+                {
+                    return BadRequest(response);
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Get list package exception : " + ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ActionResult<ApiResponse<ResponsePackageModel>>>> GetId(Guid id)
         {
