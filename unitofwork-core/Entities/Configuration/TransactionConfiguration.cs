@@ -10,6 +10,7 @@ namespace unitofwork_core.Entities.Configuration
             builder.ToTable("Transaction");
             builder.Property(t => t.CoinExchange).HasColumnType("decimal(10,0)");
             builder.Property(t => t.BalanceWallet).HasColumnType("decimal(10,0)");
+            builder.Property(t => t.CreatedAt).HasDefaultValueSql("GETDATE()").ValueGeneratedOnAddOrUpdate(); ;
         }
     }
 }
