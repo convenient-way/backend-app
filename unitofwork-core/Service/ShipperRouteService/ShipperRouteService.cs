@@ -1,4 +1,5 @@
-﻿using unitofwork_core.Constant.ShipperConstant;
+﻿using Microsoft.EntityFrameworkCore;
+using unitofwork_core.Constant.ShipperConstant;
 using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
@@ -41,7 +42,8 @@ namespace unitofwork_core.Service.ShipperRouteService
         {
             ApiResponse<ResponseShipperModel> response = new ApiResponse<ResponseShipperModel>();
             ShipperRoute route = model.ConvertToEntity();
-            Shipper? shipper = await _shipperRepo.GetByIdAsync(model.ShipperId, disableTracking: false);
+            Shipper? shipper = await _shipperRepo.GetByIdAsync(model.ShipperId, disableTracking: false,
+                include: sh => sh.Include(s => s.Wallets));
             if (shipper != null && shipper.Status == ShipperStatus.NO_ROUTE)
             {
                 await _shipperRouteRepo.InsertAsync(route);
