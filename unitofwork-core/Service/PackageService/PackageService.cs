@@ -90,7 +90,7 @@ namespace unitofwork_core.Service.PackageService
         public async Task<ApiResponse<ResponsePackageModel>> GetById(Guid id)
         {
             #region Includable
-            Func<IQueryable<Package>, IIncludableQueryable<Package, object>> include = (p) => p.Include(p => p.Products);
+            Func<IQueryable<Package>, IIncludableQueryable<Package, object?>> include = (p) => p.Include(p => p.Products).Include(p => p.Shop).Include(p => p.Shipper);
             #endregion
 
             Package? package = await _packageRepo.GetByIdAsync(id, include: include);
