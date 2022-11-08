@@ -71,7 +71,7 @@ namespace unitofwork_core.Service.ShopService
                 return response;
             }
             Shop? _checkUserName = await _shopRepo.GetSingleOrDefaultAsync(predicate: (sh => sh.UserName == model.UserName));
-            if (_checkEmail != null)
+            if (_checkUserName != null)
             {
                 response.ToFailedResponse("User name đã tồn tại, không thể đăng kí");
                 return response;
