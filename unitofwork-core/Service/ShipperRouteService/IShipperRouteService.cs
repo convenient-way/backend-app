@@ -1,4 +1,5 @@
 ﻿using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.ShipperModel;
 using unitofwork_core.Model.ShipperRouteModel;
 
 namespace unitofwork_core.Service.ShipperRouteService
@@ -7,6 +8,6 @@ namespace unitofwork_core.Service.ShipperRouteService
     {
         Task<ApiResponse<List<ResponseShipperRouteModel>>> GetRouteShipper(Guid shipperId);
         Task<ApiResponse> SetActiveRoute(Guid routeId);
-        Task<ApiResponse<ResponseShipperRouteModel>> RegisterRoute(RegisterShipperRouteModel model);
+        Task<ApiResponse<ResponseShipperModel>> RegisterRoute(RegisterShipperRouteModel model);
     }
 }

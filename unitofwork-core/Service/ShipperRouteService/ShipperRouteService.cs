@@ -3,6 +3,7 @@ using unitofwork_core.Core.IConfiguraton;
 using unitofwork_core.Core.IRepository;
 using unitofwork_core.Entities;
 using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.ShipperModel;
 using unitofwork_core.Model.ShipperRouteModel;
 
 namespace unitofwork_core.Service.ShipperRouteService
@@ -36,9 +37,9 @@ namespace unitofwork_core.Service.ShipperRouteService
 
         }
 
-        public async Task<ApiResponse<ResponseShipperRouteModel>> RegisterRoute(RegisterShipperRouteModel model)
+        public async Task<ApiResponse<ResponseShipperModel>> RegisterRoute(RegisterShipperRouteModel model)
         {
-            ApiResponse<ResponseShipperRouteModel> response = new ApiResponse<ResponseShipperRouteModel>();
+            ApiResponse<ResponseShipperModel> response = new ApiResponse<ResponseShipperModel>();
             ShipperRoute route = model.ConvertToEntity();
             Shipper? shipper = await _shipperRepo.GetByIdAsync(model.ShipperId, disableTracking: false);
             if (shipper != null && shipper.Status == ShipperStatus.NO_ROUTE)
@@ -48,7 +49,7 @@ namespace unitofwork_core.Service.ShipperRouteService
                 int result = await _unitOfWork.CompleteAsync();
                 if (result > 0)
                 {
-                    response.ToSuccessResponse(route.ToResponseModel(), "Đăng kí tuyến đường mặc định thành công");
+                    response.ToSuccessResponse(shipper.ToResponseModel(), "Đăng kí tuyến đường mặc định thành công");
                 }
                 else
                 {

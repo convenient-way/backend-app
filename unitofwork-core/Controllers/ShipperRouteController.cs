@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using unitofwork_core.Model.ApiResponseModel;
+using unitofwork_core.Model.ShipperModel;
 using unitofwork_core.Model.ShipperRouteModel;
 using unitofwork_core.Service.ShipperRouteService;
 
@@ -39,11 +40,11 @@ namespace unitofwork_core.Controllers
 
         [HttpPost("register")]
         [SwaggerOperation(Summary = "Register route for shipper")]
-        public async Task<ActionResult<ApiResponse<ResponseShipperRouteModel>>> RegisterRoute(RegisterShipperRouteModel model)
+        public async Task<ActionResult<ApiResponse<ResponseShipperModel>>> RegisterRoute(RegisterShipperRouteModel model)
         {
             try
             {
-                ApiResponse<ResponseShipperRouteModel> response = await _routeService.RegisterRoute(model);
+                ApiResponse<ResponseShipperModel> response = await _routeService.RegisterRoute(model);
                 if (response.Success == false)
                 {
                     return BadRequest(response);
