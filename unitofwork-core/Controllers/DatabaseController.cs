@@ -11,6 +11,7 @@ namespace unitofwork_core.Controllers
         public DatabaseController(IDatabaseService databaseService, ILogger<DatabaseController> logger)
         {
             _databaseService = databaseService;
+
             _logger = logger;
         }
         [HttpGet("generate-data")]
