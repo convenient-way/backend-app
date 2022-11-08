@@ -63,12 +63,11 @@ namespace unitofwork_core.Controllers
         {
             try
             {
-                ResponseShopModel shopResponse = await _shopService.Register(model);
-                return Ok(new ApiResponse<ResponseShopModel>
-                {
-                    Message = "Đăng kí thành công",
-                    Data = shopResponse
-                });
+                ApiResponse<ResponseShopModel> response = await _shopService.Register(model);
+                if (response.Success == false) {
+                    return BadRequest(response);
+                }
+                return Ok(response);
             }
             catch (Exception ex)
             {

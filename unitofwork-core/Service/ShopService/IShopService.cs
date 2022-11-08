@@ -6,7 +6,7 @@ namespace unitofwork_core.Service.ShopService
     public interface IShopService
     {
         Task<ApiResponse<ResponseShopModel?>> GetById(Guid id);
-        Task<ResponseShopModel> Register(RegisterShopModel model);
+        Task<ApiResponse<ResponseShopModel>> Register(RegisterShopModel model);
         Task<ApiResponsePaginated<ResponseShopModel>> GetList(int pageIndex, int pageSize);
     }
 }

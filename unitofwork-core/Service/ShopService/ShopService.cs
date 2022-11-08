@@ -61,8 +61,24 @@ namespace unitofwork_core.Service.ShopService
             return response;
         }
 
-        public async Task<ResponseShopModel> Register(RegisterShopModel model)
+        public async Task<ApiResponse<ResponseShopModel>> Register(RegisterShopModel model)
         {
+            ApiResponse<ResponseShopModel> response = new ApiResponse<ResponseShopModel>();
+            #region verify params
+            Shop? _checkEmail = await _shopRepo.GetSingleOrDefaultAsync(predicate: (sh => sh.Email == model.Email));
+            if (_checkEmail != null) {
+                response.ToFailedResponse("Email đã tồn tại, không thể đăng kí");
+                return response;
+            }
+            Shop? _checkUserName = await _shopRepo.GetSingleOrDefaultAsync(predicate: (sh => sh.UserName == model.UserName));
+            if (_checkEmail != null)
+            {
+                response.ToFailedResponse("User name đã tồn tại, không thể đăng kí");
+                return response;
+            }
+            #endregion
+
+
             Shop shop = new Shop();
 
             shop.UserName = model.UserName;
@@ -92,10 +108,16 @@ namespace unitofwork_core.Service.ShopService
                 defaultWallet, promotionWallet
             };
             shop.Wallets = wallets;
-
             await _shopRepo.InsertAsync(shop);
-            await _unitOfWork.CompleteAsync();
-            return shop.ToResponseModel();
+            int result = await _unitOfWork.CompleteAsync();
+            if (result > 0) {
+                response.ToSuccessResponse(shop.ToResponseModel(), "Đăng kí shop thành công");
+            }
+            else
+            {
+                response.ToFailedResponse("Đăng kí không thành công, lỗi không xác định");
+            }
+            return response;
         }
 
         
